@@ -14,6 +14,12 @@ const components = [
     { name: 'QualityEnforcer', path: './lib/QualityEnforcer.js' },
     { name: 'TerminalSetupWizard', path: './lib/TerminalSetupWizard.js' },
     { name: 'APIKeyManager', path: './lib/APIKeyManager.js' },
+    { name: 'PerformanceBenchmarkingDashboard', path: './lib/PerformanceBenchmarkingDashboard.js' },
+    { name: 'DynamicBudgetManager', path: './lib/DynamicBudgetManager.js' },
+    { name: 'CostPredictionEngine', path: './lib/CostPredictionEngine.js' },
+    { name: 'WebhookManager', path: './lib/WebhookManager.js' },
+    { name: 'AdvancedRateLimitManager', path: './lib/AdvancedRateLimitManager.js' },
+    { name: 'ModelRecommendationEngine', path: './lib/ModelRecommendationEngine.js' },
     { name: 'TeamLeaderSystem', path: './TeamLeaderSystem.js' }
 ];
 

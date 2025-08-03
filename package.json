@@ -33,9 +33,10 @@
     "url": "https://github.com/team-leader-system/v4.0/issues"
   },
   "homepage": "https://github.com/team-leader-system/v4.0#readme",
-  "dependencies": {},
-  "devDependencies": {},
+  "dependencies": {
+    "dotenv": "^17.2.1"
+  },
   "optionalDependencies": {
-    "node-fetch": "^3.0.0"
+    "node-fetch": "^3.3.2"
   }
 }
