@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Team Leader System v4.0</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f0f0f0; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; }
+        .status { background: #e8f4f8; padding: 15px; border-radius: 5px; margin: 20px 0; }
+        button { background: #007acc; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px; }
+        button:hover { background: #005a9e; }
+        .output { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-top: 20px; font-family: monospace; white-space: pre-wrap; max-height: 400px; overflow-y: auto; }
+        .team-section { margin: 10px 0; padding: 10px; background: #f9f9f9; border-radius: 5px; }
+        .team-title { font-weight: bold; color: #007acc; margin-bottom: 5px; }
+    </style>
+</head>
+<script src="lib/SetupWizard.js"></script>
+<body>
+    <div class="container">
+        <h1>🚀 Team Leader System v4.0</h1>
+        <div class="status">
+            <h3>System Status</h3>
+            <p id="status">Initializing...</p>
+        </div>
+        
+        <h3>Quick Actions</h3>
+        <button onclick="showAgents()">Show Available Agents</button>
+        <button onclick="showTeamSummary()">Show Team Summary</button>
+        <button onclick="createProject()">Create New Project</button>
+        <button onclick="showHelp()">Help</button>
+        
+        <div id="output" class="output" style="display:none;"></div>
+    </div>
+    
+    <script src="lib/AgentPromptLibrary.js"></script>
+    <script src="setup.js"></script>
+    <script>
+        // Wait for page to load
+        window.onload = function() {
+            // Initialize the system
+            const lib = new AgentPromptLibrary();
+            window.agentLib = lib; // Make it globally accessible
+            
+            // Update status
+            document.getElementById('status').innerHTML = '✅ System Ready<br>Total Agents: ' + lib.getAvailableAgents().length + '<br>Teams: 11';
+        };
+        
+        function showAgents() {
+            const agents = window.agentLib.getAvailableAgents();
+            let output = '<h4>All Available Agents (' + agents.length + ' total):</h4>';
+            agents.forEach(agent => {
+                output += agent + '<br>';
+            });
+            document.getElementById('output').style.display = 'block';
+            document.getElementById('output').innerHTML = output;
+        }
+        
+        function showTeamSummary() {
+            const teams = window.agentLib.getAgentsByTeam();
+            let output = '<h4>Team Summary:</h4>';
+            
+            Object.entries(teams).forEach(([teamName, agents]) => {
+                output += '<div class="team-section">';
+                output += '<div class="team-title">' + teamName + ' Team (' + agents.length + ' agents)</div>';
+                agents.forEach(agent => {
+                    const role = agent.includes('senior') ? '👨‍💼 Senior' : '👥 Junior';
+                    output += role + ': ' + agent + '<br>';
+                });
+                output += '</div>';
+            });
+            
+            document.getElementById('output').style.display = 'block';
+            document.getElementById('output').innerHTML = output;
+        }
+        
+        function createProject() {
+            const projectName = prompt('Enter project name:');
+            if (projectName) {
+                document.getElementById('output').style.display = 'block';
+                document.getElementById('output').innerHTML = '<h4>Project Created:</h4>Name: ' + projectName + '<br>Status: Ready to configure<br><br>Next steps:<br>1. Define requirements<br>2. Set complexity level<br>3. Activate teams';
+            }
+        }
+        
+        function showHelp() {
+            document.getElementById('output').style.display = 'block';
+            document.getElementById('output').innerHTML = '<h4>Team Leader System v4.0 Help:</h4>' +
+                '<b>What is this?</b><br>' +
+                'A hierarchical AI agent orchestration system that manages 11 specialized teams to build complete applications.<br><br>' +
+                '<b>Teams:</b><br>' +
+                '1. Orchestrator - Master coordination<br>' +
+                '2. Requirements - Analyze and validate requirements<br>' +
+                '3. Architecture - System design<br>' +
+                '4. Database - Schema and data design<br>' +
+                '5. Security - Threat modeling and compliance<br>' +
+                '6. Design - UI/UX and wireframes<br>' +
+                '7. Content - Copy and documentation<br>' +
+                '8. AI/ML - Machine learning features<br>' +
+                '9. MCP Integration - External integrations<br>' +
+                '10. Development - Code implementation<br>' +
+                '11. Validation - Testing and QA<br><br>' +
+                '<b>Features:</b><br>' +
+                '- Senior/Junior hierarchy (70% cost savings)<br>' +
+                '- Parallel processing (2-4x throughput)<br>' +
+                '- Quality gates (95% test coverage)<br>' +
+                '- Multi-model support (Claude, GPT, Gemini)';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+{
+  "name": "team-leader-system",
+  "version": "4.0.0",
+  "description": "Hierarchical AI Agent Orchestration System",
+  "main": "node-wrapper.js",
+  "scripts": {
+    "start": "node node-wrapper.js",
+    "test": "node test-complete-system.js",
+    "setup": "node node-wrapper.js",
+    "init": "node init.js",
+    "quick-test": "node quick-test.js",
+    "browser": "open index.html"
+  },
+  "keywords": [
+    "ai",
+    "agents",
+    "orchestration",
+    "team-leader",
+    "hierarchical",
+    "management",
+    "automation"
+  ],
+  "author": "Team Leader System",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/team-leader-system/v4.0"
+  },
+  "bugs": {
+    "url": "https://github.com/team-leader-system/v4.0/issues"
+  },
+  "homepage": "https://github.com/team-leader-system/v4.0#readme",
+  "dependencies": {},
+  "devDependencies": {},
+  "optionalDependencies": {
+    "node-fetch": "^3.0.0"
+  }
+}
