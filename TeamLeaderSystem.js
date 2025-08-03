@@ -8,7 +8,7 @@ const QualityEnforcer = require('./lib/QualityEnforcer');
 const CostReporter = require('./lib/CostReporter');
 const UserInteractionProcessor = require('./lib/UserInteractionProcessor');
 const CommunicationMonitor = require('./lib/CommunicationMonitor');
-const ModelSelectorIntegration = require('./lib/ModelSelectorIntegration');
+const ModelSelector = require('./lib/ModelSelectorIntegration');
 const DashboardGenerator = require('./lib/DashboardGenerator');
 const MultiModelAPIManager = require('./lib/MultiModelAPIManager');
 const AgentPromptLibrary = require('./lib/AgentPromptLibrary');
@@ -27,7 +27,7 @@ class TeamLeaderSystem {
             costReporter: new CostReporter(this),
             userInteractionProcessor: new UserInteractionProcessor(this),
             communicationMonitor: new CommunicationMonitor(this.projectPath, this),
-            modelSelector: new ModelSelectorIntegration(),
+                            modelSelector: new ModelSelector(),
             dashboardGenerator: new DashboardGenerator(this.projectName),
             apiManager: new MultiModelAPIManager(),
             promptLibrary: new AgentPromptLibrary(),

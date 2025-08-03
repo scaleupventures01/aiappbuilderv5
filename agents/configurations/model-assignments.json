@@ -1,0 +1,175 @@
+{
+  "assignments": {
+    "requirements": {
+      "name": "Requirements Analysis",
+      "complexity": "high",
+      "tokens": 150000,
+      "optimized": {
+        "models": ["claude-3-opus-20240229", "gpt-4o", "gemini-1.5-pro"],
+        "ratio": [0.4, 0.35, 0.25],
+        "costPer1M": 8.5
+      },
+      "fallback": {
+        "models": ["claude-3-sonnet-20240229", "gpt-4.1-mini", "gemini-1.5-flash"],
+        "ratio": [0.5, 0.3, 0.2],
+        "costPer1M": 3.2
+      }
+    },
+    "architect": {
+      "name": "System Architecture",
+      "complexity": "high",
+      "tokens": 200000,
+      "optimized": {
+        "models": ["claude-3-opus-20240229", "gpt-4o", "gemini-1.5-pro"],
+        "ratio": [0.45, 0.35, 0.2],
+        "costPer1M": 9.2
+      },
+      "fallback": {
+        "models": ["claude-3-sonnet-20240229", "gpt-4.1-mini", "gemini-1.5-flash"],
+        "ratio": [0.5, 0.3, 0.2],
+        "costPer1M": 3.2
+      }
+    },
+    "database": {
+      "name": "Database Design",
+      "complexity": "medium",
+      "tokens": 120000,
+      "optimized": {
+        "models": ["claude-3-sonnet-20240229", "gpt-4.1-mini", "gemini-1.5-flash"],
+        "ratio": [0.4, 0.35, 0.25],
+        "costPer1M": 3.2
+      },
+      "fallback": {
+        "models": ["deepseek-chat", "gpt-4.1-nano", "gemini-1.5-flash-8b"],
+        "ratio": [0.4, 0.35, 0.25],
+        "costPer1M": 0.8
+      }
+    },
+    "design": {
+      "name": "UI/UX Design",
+      "complexity": "medium",
+      "tokens": 100000,
+      "optimized": {
+        "models": ["claude-3-sonnet-20240229", "gpt-4.1-mini", "gemini-1.5-flash"],
+        "ratio": [0.4, 0.35, 0.25],
+        "costPer1M": 3.2
+      },
+      "fallback": {
+        "models": ["deepseek-chat", "gpt-4.1-nano", "gemini-1.5-flash-8b"],
+        "ratio": [0.4, 0.35, 0.25],
+        "costPer1M": 0.8
+      }
+    },
+    "development": {
+      "name": "Code Development",
+      "complexity": "medium",
+      "tokens": 80000,
+      "optimized": {
+        "models": ["claude-3-sonnet-20240229", "gpt-4.1-mini", "deepseek-chat"],
+        "ratio": [0.35, 0.35, 0.3],
+        "costPer1M": 2.8
+      },
+      "fallback": {
+        "models": ["deepseek-chat", "gpt-4.1-nano", "gemini-1.5-flash-8b"],
+        "ratio": [0.4, 0.35, 0.25],
+        "costPer1M": 0.8
+      }
+    },
+    "security": {
+      "name": "Security Review",
+      "complexity": "high",
+      "tokens": 150000,
+      "optimized": {
+        "models": ["claude-3-opus-20240229", "gpt-4o", "claude-3-sonnet-20240229"],
+        "ratio": [0.4, 0.35, 0.25],
+        "costPer1M": 8.5
+      },
+      "fallback": {
+        "models": ["claude-3-sonnet-20240229", "gpt-4.1-mini", "deepseek-chat"],
+        "ratio": [0.4, 0.35, 0.25],
+        "costPer1M": 3.2
+      }
+    },
+    "validation": {
+      "name": "Quality Validation",
+      "complexity": "medium",
+      "tokens": 100000,
+      "optimized": {
+        "models": ["claude-3-sonnet-20240229", "gpt-4.1-mini", "deepseek-chat"],
+        "ratio": [0.4, 0.35, 0.25],
+        "costPer1M": 3.2
+      },
+      "fallback": {
+        "models": ["deepseek-chat", "gpt-4.1-nano", "gemini-1.5-flash-8b"],
+        "ratio": [0.4, 0.35, 0.25],
+        "costPer1M": 0.8
+      }
+    },
+    "content": {
+      "name": "Content Creation",
+      "complexity": "low",
+      "tokens": 60000,
+      "optimized": {
+        "models": ["deepseek-chat", "gpt-4.1-nano", "gemini-1.5-flash-8b"],
+        "ratio": [0.4, 0.35, 0.25],
+        "costPer1M": 0.8
+      },
+      "fallback": {
+        "models": ["gemini-1.5-flash-8b", "gpt-4.1-nano", "deepseek-chat"],
+        "ratio": [0.4, 0.35, 0.25],
+        "costPer1M": 0.8
+      }
+    },
+    "orchestrator": {
+      "name": "System Orchestration",
+      "complexity": "high",
+      "tokens": 120000,
+      "optimized": {
+        "models": ["claude-3-opus-20240229", "gpt-4o", "claude-3-sonnet-20240229"],
+        "ratio": [0.4, 0.35, 0.25],
+        "costPer1M": 8.5
+      },
+      "fallback": {
+        "models": ["claude-3-sonnet-20240229", "gpt-4.1-mini", "deepseek-chat"],
+        "ratio": [0.4, 0.35, 0.25],
+        "costPer1M": 3.2
+      }
+    },
+    "team-leader": {
+      "name": "Team Leadership",
+      "complexity": "high",
+      "tokens": 100000,
+      "optimized": {
+        "models": ["claude-3-opus-20240229", "gpt-4o", "claude-3-sonnet-20240229"],
+        "ratio": [0.4, 0.35, 0.25],
+        "costPer1M": 8.5
+      },
+      "fallback": {
+        "models": ["claude-3-sonnet-20240229", "gpt-4.1-mini", "deepseek-chat"],
+        "ratio": [0.4, 0.35, 0.25],
+        "costPer1M": 3.2
+      }
+    }
+  },
+  "totals": {
+    "optimized": {
+      "totalCost": 62.4,
+      "totalTokens": 1120000,
+      "averageCostPer1M": 5.57
+    },
+    "fallback": {
+      "totalCost": 25.6,
+      "totalTokens": 1120000,
+      "averageCostPer1M": 2.29
+    },
+    "savings": {
+      "amount": 36.8,
+      "percentage": 59.0
+    }
+  },
+  "metadata": {
+    "version": "1.0",
+    "lastUpdated": "2025-08-03T00:00:00Z",
+    "description": "Model assignments for Team Leader System agents with cost optimization"
+  }
+} 
