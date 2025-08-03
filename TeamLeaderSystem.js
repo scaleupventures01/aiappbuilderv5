@@ -14,6 +14,7 @@ const MultiModelAPIManager = require('./lib/MultiModelAPIManager');
 const AgentPromptLibrary = require('./lib/AgentPromptLibrary');
 const APIKeyManager = require('./lib/APIKeyManager');
 const SetupWizard = require('./lib/SetupWizard');
+const ConversationalAI = require('./lib/ConversationalAI');
 
 class TeamLeaderSystem {
     constructor(projectName = 'default-project') {
@@ -27,11 +28,12 @@ class TeamLeaderSystem {
             costReporter: new CostReporter(this),
             userInteractionProcessor: new UserInteractionProcessor(this),
             communicationMonitor: new CommunicationMonitor(this.projectPath, this),
-                            modelSelector: new ModelSelector(),
+            modelSelector: new ModelSelector(),
             dashboardGenerator: new DashboardGenerator(this.projectName),
             apiManager: new MultiModelAPIManager(),
             promptLibrary: new AgentPromptLibrary(),
-            keyManager: new APIKeyManager()
+            keyManager: new APIKeyManager(),
+            conversationalAI: new ConversationalAI(this)
         };
         
         // System state
@@ -120,6 +122,12 @@ class TeamLeaderSystem {
             if (this.modules.userInteractionProcessor) {
                 await this.modules.userInteractionProcessor.initialize();
                 console.log("✅ User Interaction Processor initialized");
+            }
+            
+            // Initialize conversational AI
+            if (this.modules.conversationalAI) {
+                await this.modules.conversationalAI.initialize();
+                console.log("✅ Conversational AI initialized");
             }
             
             this.isInitialized = true;
@@ -417,6 +425,26 @@ class TeamLeaderSystem {
      */
     getModule(name) {
         return this.modules[name];
+    }
+    
+    /**
+     * Chat with the conversational AI
+     */
+    async chat(message, options = {}) {
+        if (!this.modules.conversationalAI) {
+            throw new Error("Conversational AI not initialized");
+        }
+        return await this.modules.conversationalAI.chat(message, options);
+    }
+    
+    /**
+     * Get conversation statistics
+     */
+    getChatStats() {
+        if (!this.modules.conversationalAI) {
+            return null;
+        }
+        return this.modules.conversationalAI.getStats();
     }
 }
 
