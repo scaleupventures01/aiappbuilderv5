@@ -1,0 +1,162 @@
+{
+  "models": {
+    "flash-lite": {
+      "id": "gemini-1.5-flash-8b",
+      "name": "Gemini 2.5 Flash-Lite",
+      "provider": "google",
+      "contextWindow": 1000000,
+      "costPerMillion": {
+        "input": 0.075,
+        "output": 0.3
+      },
+      "speed": "fastest",
+      "capabilities": ["text-generation", "high-volume", "basic-reasoning"]
+    },
+    "flash": {
+      "id": "gemini-1.5-flash",
+      "name": "Gemini 2.5 Flash",
+      "provider": "google",
+      "contextWindow": 1000000,
+      "costPerMillion": {
+        "input": 0.375,
+        "output": 1.5
+      },
+      "speed": "very_fast",
+      "capabilities": ["text-generation", "multimodal", "reasoning", "code-generation"]
+    },
+    "gemini-pro": {
+      "id": "gemini-1.5-pro",
+      "name": "Gemini 2.5 Pro",
+      "provider": "google",
+      "contextWindow": 2000000,
+      "costPerMillion": {
+        "input": 1.25,
+        "output": 5.0
+      },
+      "speed": "fast",
+      "capabilities": ["text-generation", "multimodal", "complex-reasoning", "code-generation"]
+    },
+    "deepseek-v3": {
+      "id": "deepseek-chat",
+      "name": "DeepSeek V3",
+      "provider": "deepseek",
+      "contextWindow": 128000,
+      "costPerMillion": {
+        "input": 0.14,
+        "output": 0.28
+      },
+      "speed": "fast",
+      "capabilities": ["text-generation", "code-generation", "reasoning"]
+    },
+    "gpt-4-nano": {
+      "id": "gpt-4.1-nano",
+      "name": "GPT-4.1 nano",
+      "provider": "openai",
+      "contextWindow": 128000,
+      "costPerMillion": {
+        "input": 0.1,
+        "output": 0.4
+      },
+      "speed": "fastest",
+      "capabilities": ["text-generation", "basic-reasoning"]
+    },
+    "gpt-4-mini": {
+      "id": "gpt-4.1-mini",
+      "name": "GPT-4.1 mini",
+      "provider": "openai",
+      "contextWindow": 256000,
+      "costPerMillion": {
+        "input": 0.4,
+        "output": 1.6
+      },
+      "speed": "very_fast",
+      "capabilities": ["text-generation", "reasoning", "code-generation"]
+    },
+    "o3": {
+      "id": "o3-2025",
+      "name": "o3",
+      "provider": "openai",
+      "contextWindow": 128000,
+      "costPerMillion": {
+        "input": 2.0,
+        "output": 8.0
+      },
+      "speed": "moderate",
+      "capabilities": ["complex-reasoning", "planning", "architecture", "analysis"]
+    },
+    "o4-mini": {
+      "id": "o4-mini",
+      "name": "o4-mini",
+      "provider": "openai",
+      "contextWindow": 100000,
+      "costPerMillion": {
+        "input": 1.1,
+        "output": 4.4
+      },
+      "speed": "fast",
+      "capabilities": ["reasoning", "code-generation", "analysis"]
+    },
+    "gpt-4o": {
+      "id": "gpt-4o",
+      "name": "GPT-4o",
+      "provider": "openai",
+      "contextWindow": 128000,
+      "costPerMillion": {
+        "input": 2.5,
+        "output": 10.0
+      },
+      "speed": "fast",
+      "capabilities": ["text-generation", "multimodal", "reasoning", "code-generation"]
+    },
+    "claude-37": {
+      "id": "claude-3.7-sonnet",
+      "name": "Claude 3.7 Sonnet",
+      "provider": "anthropic",
+      "contextWindow": 200000,
+      "costPerMillion": {
+        "input": 3.0,
+        "output": 15.0
+      },
+      "speed": "fast",
+      "capabilities": ["text-generation", "reasoning", "code-generation", "analysis"]
+    },
+    "opus-4": {
+      "id": "claude-3-opus-20240229",
+      "name": "Claude Opus 4",
+      "provider": "anthropic",
+      "contextWindow": 200000,
+      "costPerMillion": {
+        "input": 15.0,
+        "output": 75.0
+      },
+      "speed": "moderate",
+      "capabilities": ["complex-reasoning", "architecture", "planning", "analysis"]
+    },
+    "sonnet-4": {
+      "id": "claude-3-sonnet-20240229",
+      "name": "Claude Sonnet 4",
+      "provider": "anthropic",
+      "contextWindow": 200000,
+      "costPerMillion": {
+        "input": 3.0,
+        "output": 15.0
+      },
+      "speed": "fast",
+      "capabilities": ["text-generation", "reasoning", "code-generation"]
+    }
+  },
+  "fallbacks": {
+    "flash-lite": ["flash", "gpt-4-nano", "sonnet-4"],
+    "flash": ["gemini-pro", "gpt-4o", "sonnet-4"],
+    "gemini-pro": ["gpt-4o", "claude-37", "sonnet-4"],
+    "deepseek-v3": ["gpt-4-mini", "flash", "sonnet-4"],
+    "gpt-4-nano": ["gpt-4-mini", "flash-lite", "sonnet-4"],
+    "gpt-4-mini": ["o4-mini", "flash", "sonnet-4"],
+    "o3": ["opus-4", "gemini-pro", "sonnet-4"],
+    "o4-mini": ["gpt-4o", "flash", "sonnet-4"],
+    "gpt-4o": ["gemini-pro", "claude-37", "sonnet-4"],
+    "claude-37": ["gemini-pro", "gpt-4o", "sonnet-4"],
+    "opus-4": ["o3", "gemini-pro", "sonnet-4"]
+  },
+  "lastUpdated": "2025-08-03T00:00:00Z"
+} 
