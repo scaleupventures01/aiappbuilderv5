@@ -1,0 +1,66 @@
+{
+  "projectName": "test-project-enhanced",
+  "version": "4.0",
+  "startTime": "2025-08-03T21:09:58.983Z",
+  "lastUpdate": "2025-08-03T21:09:58.986Z",
+  "lastDataHash": "f53cafea1339732baefcc8ab47918cc0",
+  "config": {
+    "projectType": "web-app",
+    "description": "Test project for enhanced dashboard generator"
+  },
+  "progress": {
+    "overall": 0,
+    "byPhase": {
+      "requirements": 0,
+      "architecture": 0,
+      "design": 0,
+      "development": 0,
+      "testing": 0
+    }
+  },
+  "teams": {
+    "team-2": {
+      "status": "busy",
+      "name": "QA Team",
+      "lastUpdate": "2025-08-03T21:09:58.986Z"
+    }
+  },
+  "activeAgents": 0,
+  "pendingItems": {
+    "approvals": [],
+    "handoffs": [],
+    "escalations": [],
+    "decisions": []
+  },
+  "quality": {
+    "testCoverage": null,
+    "securityScore": null,
+    "performance": null,
+    "efficiency": {
+      "tokenRatio": 0,
+      "costPerHour": 0,
+      "estimatedSavings": 0
+    }
+  },
+  "notifications": [
+    {
+      "id": "activity-mdw6dcuh-msmmwr6vv",
+      "message": "Test activity via generator",
+      "type": "success",
+      "timestamp": "2025-08-03T21:09:58.985Z"
+    }
+  ],
+  "realtime": {
+    "lastActivity": "2025-08-03T21:09:58.985Z",
+    "activeProcesses": [],
+    "systemHealth": "healthy"
+  },
+  "projectMetrics": {
+    "totalTasks": 25,
+    "completedTasks": 15,
+    "activeAgents": 8,
+    "totalCost": 1250.75,
+    "averageResponseTime": 1500,
+    "qualityScore": 92.5
+  }
+}

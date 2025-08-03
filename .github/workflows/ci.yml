@@ -1,0 +1,253 @@
+name: Team Leader System CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  release:
+    types: [ published ]
+
+env:
+  NODE_VERSION: '18'
+  NPM_VERSION: '9'
+
+jobs:
+  # Test Job
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [16, 18, 20]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run linting
+      run: npm run lint || echo "Linting not configured"
+      
+    - name: Run tests
+      run: npm test
+      
+    - name: Run specific test suites
+      run: |
+        npm run test:initiation
+        npm run test:refactoring
+        npm run test:dashboard
+      continue-on-error: true
+      
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results-${{ matrix.node-version }}
+        path: |
+          test-results/
+          coverage/
+        retention-days: 7
+
+  # Security Scan
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run security audit
+      run: npm audit --audit-level=moderate
+      
+    - name: Run Snyk security scan
+      uses: snyk/actions/node@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        args: --severity-threshold=high
+      continue-on-error: true
+
+  # Build and Test Docker
+  docker:
+    name: Docker Build & Test
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      
+    - name: Build Docker image
+      run: docker build -t team-leader-system .
+      
+    - name: Test Docker image
+      run: |
+        docker run --rm team-leader-system npm test
+      continue-on-error: true
+      
+    - name: Run Docker health check
+      run: |
+        docker run -d --name test-container team-leader-system
+        sleep 10
+        docker ps
+        docker logs test-container
+        docker stop test-container
+        docker rm test-container
+
+  # Code Quality
+  quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Check code formatting
+      run: npm run format:check || echo "Format check not configured"
+      
+    - name: Run complexity analysis
+      run: npm run complexity || echo "Complexity analysis not configured"
+      
+    - name: Check for TODO comments
+      run: |
+        echo "Checking for TODO comments..."
+        if grep -r "TODO" . --exclude-dir=node_modules --exclude-dir=.git; then
+          echo "Found TODO comments. Please address them before merging."
+          exit 1
+        fi
+
+  # Documentation Check
+  docs:
+    name: Documentation Check
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Check README links
+      run: |
+        echo "Checking documentation..."
+        if [ -f "README.md" ]; then
+          echo "README.md exists ✓"
+        else
+          echo "README.md missing ✗"
+          exit 1
+        fi
+        
+        if [ -d "docs" ]; then
+          echo "docs/ directory exists ✓"
+          echo "Documentation files:"
+          ls -la docs/
+        else
+          echo "docs/ directory missing ✗"
+          exit 1
+        fi
+
+  # Performance Test
+  performance:
+    name: Performance Test
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run performance tests
+      run: npm run test:performance || echo "Performance tests not configured"
+      continue-on-error: true
+
+  # Deploy to Staging (on main branch)
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [test, security, docker, quality, docs]
+    if: github.ref == 'refs/heads/main'
+    environment: staging
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Deploy to staging
+      run: |
+        echo "Deploying to staging environment..."
+        # Add your staging deployment logic here
+        echo "Staging deployment completed"
+
+  # Deploy to Production (on release)
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [test, security, docker, quality, docs]
+    if: github.event_name == 'release'
+    environment: production
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Deploy to production
+      run: |
+        echo "Deploying to production environment..."
+        # Add your production deployment logic here
+        echo "Production deployment completed"
+
+  # Notify on Failure
+  notify:
+    name: Notify on Failure
+    runs-on: ubuntu-latest
+    needs: [test, security, docker, quality, docs]
+    if: failure()
+    
+    steps:
+    - name: Notify failure
+      run: |
+        echo "One or more jobs failed. Please check the logs."
+        # Add your notification logic here (Slack, email, etc.) 

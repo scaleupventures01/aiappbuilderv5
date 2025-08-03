@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test-project-enhanced - Project Dashboard v4.0</title>
+    <style>
+        
+            * {
+                box-sizing: border-box;
+            }
+            
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+                color: #333;
+                line-height: 1.6;
+            }
+            
+            .dashboard-container {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+            
+            .dashboard-header {
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(10px);
+                border-radius: 15px;
+                padding: 25px;
+                margin-bottom: 25px;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            }
+            
+            .dashboard-title {
+                margin: 0 0 10px 0;
+                font-size: 2.5em;
+                font-weight: 700;
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+            
+            .dashboard-subtitle {
+                margin: 0;
+                color: #666;
+                font-size: 1.1em;
+                font-weight: 400;
+            }
+            
+            .main-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+                gap: 25px;
+                margin-bottom: 25px;
+            }
+            
+            .card {
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(10px);
+                border-radius: 15px;
+                padding: 25px;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                transition: all 0.3s ease;
+            }
+            
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            }
+            
+            .card-header {
+                display: flex;
+                align-items: center;
+                margin-bottom: 20px;
+                padding-bottom: 15px;
+                border-bottom: 2px solid #f0f0f0;
+            }
+            
+            .card-icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-right: 15px;
+                font-size: 1.2em;
+                color: white;
+            }
+            
+            .card-title {
+                margin: 0;
+                font-size: 1.3em;
+                font-weight: 600;
+                color: #333;
+            }
+            
+            .metric-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 15px;
+            }
+            
+            .metric {
+                text-align: center;
+                padding: 15px;
+                background: rgba(255, 255, 255, 0.7);
+                border-radius: 10px;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+            }
+            
+            .metric-value {
+                font-size: 1.8em;
+                font-weight: 700;
+                margin-bottom: 5px;
+                color: #333;
+            }
+            
+            .metric-label {
+                font-size: 0.9em;
+                color: #666;
+                font-weight: 500;
+            }
+            
+            .progress-bar {
+                width: 100%;
+                height: 8px;
+                background: rgba(0, 0, 0, 0.1);
+                border-radius: 4px;
+                overflow: hidden;
+                margin: 10px 0;
+            }
+            
+            .progress-fill {
+                height: 100%;
+                background: linear-gradient(90deg, #4CAF50, #45a049);
+                border-radius: 4px;
+                transition: width 0.3s ease;
+            }
+            
+            .status-indicator {
+                display: inline-block;
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                margin-right: 8px;
+            }
+            
+            .status-healthy { background: #4CAF50; }
+            .status-warning { background: #FF9800; }
+            .status-critical { background: #f44336; }
+            .status-offline { background: #9e9e9e; }
+            
+            .notification {
+                padding: 12px 15px;
+                margin: 8px 0;
+                border-radius: 8px;
+                border-left: 4px solid;
+                background: rgba(255, 255, 255, 0.9);
+            }
+            
+            .notification-info {
+                border-left-color: #2196F3;
+                background: rgba(33, 150, 243, 0.1);
+            }
+            
+            .notification-success {
+                border-left-color: #4CAF50;
+                background: rgba(76, 175, 80, 0.1);
+            }
+            
+            .notification-warning {
+                border-left-color: #FF9800;
+                background: rgba(255, 152, 0, 0.1);
+            }
+            
+            .notification-error {
+                border-left-color: #f44336;
+                background: rgba(244, 67, 54, 0.1);
+            }
+            
+            .team-list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            
+            .team-item {
+                display: flex;
+                align-items: center;
+                padding: 12px;
+                margin: 8px 0;
+                background: rgba(255, 255, 255, 0.7);
+                border-radius: 8px;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+            }
+            
+            .team-name {
+                flex: 1;
+                font-weight: 500;
+            }
+            
+            .team-status {
+                font-size: 0.9em;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-weight: 500;
+            }
+            
+            .status-active {
+                background: rgba(76, 175, 80, 0.2);
+                color: #2e7d32;
+            }
+            
+            .status-idle {
+                background: rgba(255, 152, 0, 0.2);
+                color: #ef6c00;
+            }
+            
+            .status-busy {
+                background: rgba(33, 150, 243, 0.2);
+                color: #1565c0;
+            }
+            
+            .status-error {
+                background: rgba(244, 67, 54, 0.2);
+                color: #c62828;
+            }
+            
+            .pending-list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            
+            .pending-item {
+                padding: 12px;
+                margin: 8px 0;
+                background: rgba(255, 255, 255, 0.8);
+                border-radius: 8px;
+                border: 1px solid rgba(255, 255, 255, 0.4);
+                border-left: 4px solid #FF9800;
+            }
+            
+            .pending-title {
+                font-weight: 600;
+                margin-bottom: 5px;
+                color: #333;
+            }
+            
+            .pending-description {
+                font-size: 0.9em;
+                color: #666;
+                margin-bottom: 8px;
+            }
+            
+            .pending-meta {
+                font-size: 0.8em;
+                color: #999;
+            }
+            
+            .chart-container {
+                height: 200px;
+                margin: 15px 0;
+                background: rgba(255, 255, 255, 0.5);
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #666;
+                font-style: italic;
+            }
+            
+            .action-buttons {
+                display: flex;
+                gap: 10px;
+                margin-top: 15px;
+            }
+            
+            .btn {
+                padding: 8px 16px;
+                border: none;
+                border-radius: 6px;
+                font-size: 0.9em;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                text-decoration: none;
+                display: inline-block;
+            }
+            
+            .btn-primary {
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                color: white;
+            }
+            
+            .btn-primary:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            }
+            
+            .btn-secondary {
+                background: rgba(255, 255, 255, 0.8);
+                color: #333;
+                border: 1px solid rgba(0, 0, 0, 0.1);
+            }
+            
+            .btn-secondary:hover {
+                background: rgba(255, 255, 255, 1);
+                transform: translateY(-1px);
+            }
+            
+            .btn-success {
+                background: #4CAF50;
+                color: white;
+            }
+            
+            .btn-warning {
+                background: #FF9800;
+                color: white;
+            }
+            
+            .btn-danger {
+                background: #f44336;
+                color: white;
+            }
+            
+            .loading {
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                border: 3px solid rgba(255, 255, 255, 0.3);
+                border-radius: 50%;
+                border-top-color: #fff;
+                animation: spin 1s ease-in-out infinite;
+            }
+            
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+            
+            .fade-in {
+                animation: fadeIn 0.5s ease-in;
+            }
+            
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            
+            .pulse {
+                animation: pulse 2s infinite;
+            }
+            
+            @keyframes pulse {
+                0% { opacity: 1; }
+                50% { opacity: 0.7; }
+                100% { opacity: 1; }
+            }
+            
+            /* Responsive design */
+            @media (max-width: 768px) {
+                .dashboard-container {
+                    padding: 15px;
+                }
+                
+                .main-grid {
+                    grid-template-columns: 1fr;
+                    gap: 20px;
+                }
+                
+                .card {
+                    padding: 20px;
+                }
+                
+                .metric-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+                
+                .dashboard-title {
+                    font-size: 2em;
+                }
+            }
+            
+            @media (max-width: 480px) {
+                .metric-grid {
+                    grid-template-columns: 1fr;
+                }
+                
+                .action-buttons {
+                    flex-direction: column;
+                }
+                
+                .btn {
+                    width: 100%;
+                    text-align: center;
+                }
+            }
+        
+        
+            .icon {
+                display: inline-block;
+                width: 1em;
+                height: 1em;
+                vertical-align: middle;
+                fill: currentColor;
+            }
+            
+            .icon-sm { width: 0.875em; height: 0.875em; }
+            .icon-lg { width: 1.33em; height: 1.33em; }
+            .icon-xl { width: 1.5em; height: 1.5em; }
+            
+            .icon-spin {
+                animation: spin 1s linear infinite;
+            }
+        
+            .slide-in {
+                animation: slideIn 0.3s ease-out;
+            }
+            
+            @keyframes slideIn {
+                from {
+                    opacity: 0;
+                    transform: translateX(-20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+            
+            .bounce-in {
+                animation: bounceIn 0.6s ease-out;
+            }
+            
+            @keyframes bounceIn {
+                0% {
+                    opacity: 0;
+                    transform: scale(0.3);
+                }
+                50% {
+                    opacity: 1;
+                    transform: scale(1.05);
+                }
+                70% {
+                    transform: scale(0.9);
+                }
+                100% {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+            }
+            
+            .fade-out {
+                animation: fadeOut 0.3s ease-in;
+            }
+            
+            @keyframes fadeOut {
+                from {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+                to {
+                    opacity: 0;
+                    transform: translateY(-20px);
+                }
+            }
+        
+        
+            .project-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+            
+            .project-info {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+            
+            .project-avatar {
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24px;
+                color: white;
+                font-weight: bold;
+            }
+            
+            .project-details h1 {
+                margin: 0;
+                font-size: 2em;
+                color: #333;
+            }
+            
+            .project-details p {
+                margin: 5px 0 0 0;
+                color: #666;
+                font-size: 1.1em;
+            }
+            
+            .project-actions {
+                display: flex;
+                gap: 10px;
+            }
+            
+            .metric-trend {
+                font-size: 0.8em;
+                font-weight: 500;
+                margin-top: 5px;
+            }
+            
+            .metric-trend.positive {
+                color: #4CAF50;
+            }
+            
+            .metric-trend.negative {
+                color: #f44336;
+            }
+            
+            .progress-item {
+                margin: 15px 0;
+            }
+            
+            .progress-label {
+                font-weight: 500;
+                margin-bottom: 5px;
+                color: #333;
+            }
+            
+            .progress-text {
+                font-size: 0.9em;
+                color: #666;
+                margin-top: 5px;
+            }
+            
+            .chart-placeholder {
+                height: 200px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(255, 255, 255, 0.5);
+                border-radius: 8px;
+                color: #666;
+                font-style: italic;
+            }
+            
+            .data-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 15px;
+            }
+            
+            .data-table th,
+            .data-table td {
+                padding: 12px;
+                text-align: left;
+                border-bottom: 1px solid #eee;
+            }
+            
+            .data-table th {
+                background: rgba(255, 255, 255, 0.7);
+                font-weight: 600;
+                color: #333;
+            }
+            
+            .data-table tr:hover {
+                background: rgba(255, 255, 255, 0.3);
+            }
+            
+            .badge {
+                padding: 4px 8px;
+                border-radius: 12px;
+                font-size: 0.8em;
+                font-weight: 500;
+            }
+            
+            .badge-default { background: rgba(0, 0, 0, 0.1); color: #333; }
+            .badge-success { background: rgba(76, 175, 80, 0.2); color: #2e7d32; }
+            .badge-warning { background: rgba(255, 152, 0, 0.2); color: #ef6c00; }
+            .badge-error { background: rgba(244, 67, 54, 0.2); color: #c62828; }
+            .badge-info { background: rgba(33, 150, 243, 0.2); color: #1565c0; }
+            
+            .timeline {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            
+            .timeline-item {
+                display: flex;
+                margin: 20px 0;
+                position: relative;
+            }
+            
+            .timeline-marker {
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                margin-right: 15px;
+                margin-top: 5px;
+                flex-shrink: 0;
+            }
+            
+            .timeline-marker.info { background: #2196F3; }
+            .timeline-marker.success { background: #4CAF50; }
+            .timeline-marker.warning { background: #FF9800; }
+            .timeline-marker.error { background: #f44336; }
+            
+            .timeline-content {
+                flex: 1;
+                background: rgba(255, 255, 255, 0.7);
+                padding: 15px;
+                border-radius: 8px;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+            }
+            
+            .timeline-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 8px;
+            }
+            
+            .timeline-title {
+                font-weight: 600;
+                color: #333;
+            }
+            
+            .timeline-time {
+                font-size: 0.9em;
+                color: #666;
+            }
+            
+            .timeline-message {
+                color: #555;
+                margin-bottom: 5px;
+            }
+            
+            .timeline-date {
+                font-size: 0.8em;
+                color: #999;
+            }
+        
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        
+            <div class="dashboard-header">
+                <div class="project-header">
+                    <div class="project-info">
+                        <div class="project-avatar">T</div>
+                        <div class="project-details">
+                            <h1>test-project-enhanced</h1>
+                            <p>Project Dashboard • Version 4.0</p>
+                        </div>
+                    </div>
+                    <div class="project-actions">
+                        <button class="btn btn-primary" onclick="refreshDashboard()">Refresh</button>
+                        <button class="btn btn-secondary" onclick="exportData()">Export</button>
+                    </div>
+                </div>
+            </div>
+        
+        
+            <div class="main-grid">
+                
+            <section class="card" id="overview">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #667eea, #764ba2)">
+                        📊
+                    </div>
+                    <h3 class="card-title">Project Overview</h3>
+                </div>
+                <div class="card-content">
+                    <div class="metric-grid">
+            <div class="metric" style="border-left: 4px solid #667eea">
+                <div class="metric-header">
+                    <span class="metric-icon">📋</span>
+                    <span class="metric-title">Total Tasks</span>
+                </div>
+                <div class="metric-value">25</div>
+                
+            </div>
+        
+            <div class="metric" style="border-left: 4px solid #4CAF50">
+                <div class="metric-header">
+                    <span class="metric-icon">✅</span>
+                    <span class="metric-title">Completed</span>
+                </div>
+                <div class="metric-value">15</div>
+                
+            </div>
+        
+            <div class="metric" style="border-left: 4px solid #FF9800">
+                <div class="metric-header">
+                    <span class="metric-icon">🤖</span>
+                    <span class="metric-title">Active Agents</span>
+                </div>
+                <div class="metric-value">8</div>
+                
+            </div>
+        
+            <div class="metric" style="border-left: 4px solid #9C27B0">
+                <div class="metric-header">
+                    <span class="metric-icon">⭐</span>
+                    <span class="metric-title">Quality Score</span>
+                </div>
+                <div class="metric-value">92.5%</div>
+                
+            </div>
+        </div>
+                </div>
+                
+            </section>
+        
+                
+            <section class="card" id="progress">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #667eea, #764ba2)">
+                        📈
+                    </div>
+                    <h3 class="card-title">Project Progress</h3>
+                </div>
+                <div class="card-content">
+                    <div class="progress-container">
+            <div class="progress-item">
+                <div class="progress-label">Requirements</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%; background: #667eea"></div>
+                </div>
+                <div class="progress-text">0.0%</div>
+            </div>
+        
+            <div class="progress-item">
+                <div class="progress-label">Architecture</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%; background: #764ba2"></div>
+                </div>
+                <div class="progress-text">0.0%</div>
+            </div>
+        
+            <div class="progress-item">
+                <div class="progress-label">Design</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%; background: #f093fb"></div>
+                </div>
+                <div class="progress-text">0.0%</div>
+            </div>
+        
+            <div class="progress-item">
+                <div class="progress-label">Development</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%; background: #4CAF50"></div>
+                </div>
+                <div class="progress-text">0.0%</div>
+            </div>
+        
+            <div class="progress-item">
+                <div class="progress-label">Testing</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%; background: #FF9800"></div>
+                </div>
+                <div class="progress-text">0.0%</div>
+            </div>
+        </div>
+                </div>
+                
+            </section>
+        
+                
+            <section class="card" id="teams">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #667eea, #764ba2)">
+                        👥
+                    </div>
+                    <h3 class="card-title">Team Status</h3>
+                </div>
+                <div class="card-content">
+                    <ul class="team-list">
+            <div class="team-item">
+                <div class="team-info">
+                    <div class="team-name">QA Team</div>
+                    <div class="team-meta">Last update: 5:09:58 PM</div>
+                </div>
+                
+            <div class="status-indicator status-busy">
+                <span class="status-dot"></span>
+                <span class="status-text">Busy</span>
+                <span class="status-label">Team</span>
+            </div>
+        
+            </div>
+        </ul>
+                </div>
+                
+            </section>
+        
+                
+            <section class="card" id="pending">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #667eea, #764ba2)">
+                        ⏳
+                    </div>
+                    <h3 class="card-title">Pending Items</h3>
+                </div>
+                <div class="card-content">
+                    
+            <div class="empty-state">
+                <div class="empty-icon">⏳</div>
+                <h3 class="empty-title">No Pending Items</h3>
+                <p class="empty-message">All items have been processed</p>
+            </div>
+        
+                </div>
+                
+            </section>
+        
+                
+            <section class="card" id="costs">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #667eea, #764ba2)">
+                        💰
+                    </div>
+                    <h3 class="card-title">Cost Analysis</h3>
+                </div>
+                <div class="card-content">
+                    
+            <div class="metric-grid">
+                
+            <div class="metric" style="border-left: 4px solid #FF9800">
+                <div class="metric-header">
+                    <span class="metric-icon">💰</span>
+                    <span class="metric-title">Total Cost</span>
+                </div>
+                <div class="metric-value">$1,250.75</div>
+                
+            </div>
+        
+                
+            <div class="metric" style="border-left: 4px solid #2196F3">
+                <div class="metric-header">
+                    <span class="metric-icon">📊</span>
+                    <span class="metric-title">Average Cost</span>
+                </div>
+                <div class="metric-value">$50.03</div>
+                
+            </div>
+        
+                
+            <div class="metric" style="border-left: 4px solid #4CAF50">
+                <div class="metric-header">
+                    <span class="metric-icon">📈</span>
+                    <span class="metric-title">Cost Trend</span>
+                </div>
+                <div class="metric-value">5.2%</div>
+                
+            </div>
+        
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Cost Over Time</h3>
+                    <div class="chart-controls">
+                        <select class="chart-type-selector" onchange="changeChartType('costs-chart', this.value)">
+                            <option value="line" selected>Line</option>
+                            <option value="bar" >Bar</option>
+                            <option value="area" >Area</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="costs-chart" class="chart-content">
+                    <div class="chart-placeholder">
+                        <span class="chart-loading">Loading chart...</span>
+                    </div>
+                </div>
+            </div>
+        
+        
+                </div>
+                
+            </section>
+        
+                
+            <section class="card" id="performance">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #667eea, #764ba2)">
+                        ⚡
+                    </div>
+                    <h3 class="card-title">Performance Metrics</h3>
+                </div>
+                <div class="card-content">
+                    
+            <div class="metric-grid">
+                
+            <div class="metric" style="border-left: 4px solid #4CAF50">
+                <div class="metric-header">
+                    <span class="metric-icon">⚡</span>
+                    <span class="metric-title">Avg Response</span>
+                </div>
+                <div class="metric-value">1.5s</div>
+                
+            </div>
+        
+                
+            <div class="metric" style="border-left: 4px solid #2196F3">
+                <div class="metric-header">
+                    <span class="metric-icon">🚀</span>
+                    <span class="metric-title">Throughput</span>
+                </div>
+                <div class="metric-value">45.2req/min</div>
+                
+            </div>
+        
+                
+            <div class="metric" style="border-left: 4px solid #FF9800">
+                <div class="metric-header">
+                    <span class="metric-icon">⚠️</span>
+                    <span class="metric-title">Error Rate</span>
+                </div>
+                <div class="metric-value">2.1%</div>
+                
+            </div>
+        
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Performance Metrics</h3>
+                    <div class="chart-controls">
+                        <select class="chart-type-selector" onchange="changeChartType('performance-chart', this.value)">
+                            <option value="line" selected>Line</option>
+                            <option value="bar" >Bar</option>
+                            <option value="area" >Area</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="performance-chart" class="chart-content">
+                    <div class="chart-placeholder">
+                        <span class="chart-loading">Loading chart...</span>
+                    </div>
+                </div>
+            </div>
+        
+        
+                </div>
+                
+            </section>
+        
+                
+            <section class="card" id="quality">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #667eea, #764ba2)">
+                        ⭐
+                    </div>
+                    <h3 class="card-title">Quality Metrics</h3>
+                </div>
+                <div class="card-content">
+                    
+            <div class="metric-grid">
+                
+            <div class="metric" style="border-left: 4px solid #9C27B0">
+                <div class="metric-header">
+                    <span class="metric-icon">⭐</span>
+                    <span class="metric-title">Overall Score</span>
+                </div>
+                <div class="metric-value">92.5%</div>
+                
+            </div>
+        
+                
+            <div class="metric" style="border-left: 4px solid #4CAF50">
+                <div class="metric-header">
+                    <span class="metric-icon">🧪</span>
+                    <span class="metric-title">Test Coverage</span>
+                </div>
+                <div class="metric-value">85.3%</div>
+                
+            </div>
+        
+                
+            <div class="metric" style="border-left: 4px solid #FF9800">
+                <div class="metric-header">
+                    <span class="metric-icon">🔒</span>
+                    <span class="metric-title">Security Score</span>
+                </div>
+                <div class="metric-value">92.1%</div>
+                
+            </div>
+        
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Quality Metrics</h3>
+                    <div class="chart-controls">
+                        <select class="chart-type-selector" onchange="changeChartType('quality-chart', this.value)">
+                            <option value="line" >Line</option>
+                            <option value="bar" selected>Bar</option>
+                            <option value="area" >Area</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="quality-chart" class="chart-content">
+                    <div class="chart-placeholder">
+                        <span class="chart-loading">Loading chart...</span>
+                    </div>
+                </div>
+            </div>
+        
+        
+                </div>
+                
+            </section>
+        
+                
+            <section class="card" id="activity">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #667eea, #764ba2)">
+                        📝
+                    </div>
+                    <h3 class="card-title">Recent Activity</h3>
+                </div>
+                <div class="card-content">
+                    <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-marker success"></div>
+                <div class="timeline-content">
+                    <div class="timeline-header">
+                        <span class="timeline-title">success</span>
+                        <span class="timeline-time">5:09:58 PM</span>
+                    </div>
+                    <div class="timeline-message">Test activity via generator</div>
+                    <div class="timeline-date">8/3/2025</div>
+                </div>
+            </div>
+        </div>
+                </div>
+                
+            </section>
+        
+            </div>
+        
+        
+            <div class="dashboard-footer">
+                <p>Last updated: <span id="last-update">8/3/2025, 5:09:58 PM</span></p>
+                <p>Team Leader System v4.0</p>
+            </div>
+        
+    </div>
+    <script>
+        
+            // Dashboard update functions
+            async function refreshDashboard() {
+                try {
+                    const response = await fetch('/api/dashboard/refresh');
+                    if (response.ok) {
+                        location.reload();
+                    }
+                } catch (error) {
+                    console.error('Failed to refresh dashboard:', error);
+                }
+            }
+            
+            async function exportData() {
+                try {
+                    const response = await fetch('/api/dashboard/export');
+                    if (response.ok) {
+                        const blob = await response.blob();
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'test-project-enhanced-dashboard-export.json';
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+                    }
+                } catch (error) {
+                    console.error('Failed to export data:', error);
+                }
+            }
+            
+            async function approveItem(itemId) {
+                try {
+                    const response = await fetch('/api/pending/approve', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ itemId })
+                    });
+                    if (response.ok) {
+                        location.reload();
+                    }
+                } catch (error) {
+                    console.error('Failed to approve item:', error);
+                }
+            }
+            
+            async function rejectItem(itemId) {
+                try {
+                    const response = await fetch('/api/pending/reject', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ itemId })
+                    });
+                    if (response.ok) {
+                        location.reload();
+                    }
+                } catch (error) {
+                    console.error('Failed to reject item:', error);
+                }
+            }
+            
+            // Auto-refresh every 30 seconds
+            setInterval(() => {
+                document.getElementById('last-update').textContent = new Date().toLocaleString();
+            }, 30000);
+            
+            // Add fade-in animation to cards
+            document.addEventListener('DOMContentLoaded', () => {
+                const cards = document.querySelectorAll('.card');
+                cards.forEach((card, index) => {
+                    card.style.animationDelay = `${index * 0.1}s`;
+                    card.classList.add('fade-in');
+                });
+            });
+        
+    </script>
+</body>
+</html>

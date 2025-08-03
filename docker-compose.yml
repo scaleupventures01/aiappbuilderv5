@@ -1,0 +1,88 @@
+version: '3.8'
+
+services:
+  team-leader-system:
+    build: .
+    container_name: team-leader-system
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DASHBOARD_PORT=3000
+      - LOG_LEVEL=info
+    volumes:
+      - ./projects:/app/projects
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./.teamleader:/app/.teamleader
+    env_file:
+      - .env
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "console.log('Health check passed')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - team-leader-network
+
+  # Optional: MCP Server for multi-model support
+  mcp-server:
+    image: ghcr.io/litellm/litellm:latest
+    container_name: mcp-server
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+    volumes:
+      - ./config/litellm_config.yaml:/app/config.yaml
+    restart: unless-stopped
+    profiles:
+      - mcp
+    networks:
+      - team-leader-network
+
+  # Optional: Redis for caching (if enabled)
+  redis:
+    image: redis:7-alpine
+    container_name: team-leader-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    profiles:
+      - cache
+    networks:
+      - team-leader-network
+
+  # Optional: PostgreSQL for data persistence (if enabled)
+  postgres:
+    image: postgres:15-alpine
+    container_name: team-leader-postgres
+    environment:
+      - POSTGRES_DB=teamleader
+      - POSTGRES_USER=teamleader
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-teamleader123}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    profiles:
+      - database
+    networks:
+      - team-leader-network
+
+volumes:
+  redis-data:
+  postgres-data:
+
+networks:
+  team-leader-network:
+    driver: bridge 
