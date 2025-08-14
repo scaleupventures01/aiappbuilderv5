@@ -1,0 +1,991 @@
+# Product Requirements Document: Trading Plan Wizard Application Refactoring
+
+**Document Version:** 1.0  
+**Date:** Current Date  
+**Author:** Engineering Team  
+**Status:** Draft  
+**Review Cycle:** Architecture Review → Product Approval → Engineering Sign-off
+
+---
+
+## 1. Executive Summary
+
+### 1.1 Overview
+Transform the Trading Plan Wizard from a single-file MVP (2,847 lines) into a production-ready, component-based web application with modern development tooling, maintainable architecture, and scalable infrastructure.
+
+### 1.2 Business Objectives
+- **Accelerate Development:** Reduce feature development time by 60% through modular architecture
+- **Improve Quality:** Decrease bug rate by 40% with testable components and type safety
+- **Enable Scale:** Support 10x user growth without architecture changes
+- **Enhance UX:** Improve page load time by 50% and enable instant navigation
+
+### 1.3 Key Outcomes
+- Single HTML file → Component-based architecture
+- File protocol → Development server with HMR
+- Global functions → ES6 modules with dependency injection
+- No tests → 80% code coverage
+- Manual deployment → CI/CD pipeline
+
+---
+
+## 2. Current State Analysis
+
+### 2.1 Architecture Audit
+
+| Component | Current State | Lines | Issues |
+|-----------|--------------|-------|---------|
+| **index.html** | Monolithic file with all views | 2,847 | Unmaintainable, merge conflicts, no code reuse |
+| **JavaScript** | Partially modularized (Phase 2 complete) | ~2,000 | Mixed paradigms, global state, tight coupling |
+| **CSS** | Tailwind CDN + inline styles | ~200 | No component scoping, runtime overhead |
+| **Build** | None (file://) | 0 | No optimization, no dev tools, no HMR |
+| **Testing** | Manual only | 0 | No unit tests, no integration tests |
+| **State** | localStorage + global variables | N/A | No reactivity, manual DOM updates |
+
+### 2.2 Technical Debt
+
+```javascript
+// Current Problems
+- 35+ global variables
+- 200+ direct DOM queries
+- 80+ inline event handlers
+- 0% test coverage
+- No error boundaries
+- No performance monitoring
+- No build optimization
+- No code splitting
+```
+
+### 2.3 Performance Baseline
+
+| Metric | Current | Target | Improvement |
+|--------|---------|--------|-------------|
+| Initial Load | 2.8s | 1.2s | 57% |
+| Time to Interactive | 3.2s | 1.5s | 53% |
+| Bundle Size | 285KB | 120KB | 58% |
+| Lighthouse Score | 68 | 95+ | 40% |
+
+---
+
+## 3. Target Architecture
+
+### 3.1 Technology Stack
+
+```yaml
+Core:
+  Language: JavaScript/TypeScript
+  Runtime: Modern browsers (ES2020+)
+  Framework: Web Components → React (phased)
+  
+Build & Development:
+  Bundler: Vite 5.x
+  Package Manager: npm/pnpm
+  Dev Server: Vite Dev Server
+  Hot Reload: Vite HMR
+  
+State Management:
+  Local: Zustand or Context API
+  Persistence: IndexedDB + localStorage
+  
+Testing:
+  Unit: Vitest
+  Component: Testing Library
+  E2E: Playwright
+  
+Deployment:
+  Hosting: Vercel/Netlify
+  CDN: CloudFlare
+  CI/CD: GitHub Actions
+```
+
+### 3.2 Application Structure
+
+```
+trading-wizard/
+├── src/
+│   ├── components/           # UI Components
+│   │   ├── common/           # Shared components
+│   │   │   ├── Button/
+│   │   │   ├── Modal/
+│   │   │   └── Toast/
+│   │   ├── wizard/           # Wizard components
+│   │   │   ├── WizardShell.tsx
+│   │   │   ├── steps/
+│   │   │   │   ├── BasicInfo.tsx
+│   │   │   │   ├── TradingSetups.tsx
+│   │   │   │   ├── RiskRules.tsx
+│   │   │   │   └── Review.tsx
+│   │   │   └── hooks/
+│   │   │       └── useWizardState.ts
+│   │   ├── verdict/          # Verdict engine
+│   │   │   ├── VerdictForm.tsx
+│   │   │   ├── VerdictResults.tsx
+│   │   │   └── engine/
+│   │   │       └── evaluate.ts
+│   │   └── journal/          # Trade journal
+│   │       ├── JournalTable.tsx
+│   │       ├── EntryForm.tsx
+│   │       └── Statistics.tsx
+│   │
+│   ├── stores/               # State management
+│   │   ├── app.store.ts
+│   │   ├── plan.store.ts
+│   │   └── journal.store.ts
+│   │
+│   ├── services/             # Business logic
+│   │   ├── storage/
+│   │   ├── validation/
+│   │   ├── tenant/
+│   │   └── auth/
+│   │
+│   ├── routes/               # Route definitions
+│   │   └── index.tsx
+│   │
+│   ├── styles/               # Global styles
+│   │   ├── globals.css
+│   │   └── variables.css
+│   │
+│   ├── types/                # TypeScript types
+│   │   └── index.ts
+│   │
+│   ├── utils/                # Utilities
+│   │   ├── constants.ts
+│   │   └── helpers.ts
+│   │
+│   └── main.tsx              # Entry point
+│
+├── public/
+│   ├── index.html            # < 50 lines!
+│   └── assets/
+│
+├── tests/
+│   ├── unit/
+│   ├── integration/
+│   └── e2e/
+│
+├── docs/
+│   ├── architecture/
+│   └── api/
+│
+├── .github/
+│   └── workflows/
+│       ├── ci.yml
+│       └── deploy.yml
+│
+├── package.json
+├── vite.config.ts
+├── tsconfig.json
+├── .env.example
+└── README.md
+```
+
+### 3.3 Component Architecture
+
+```typescript
+// Example: Wizard Component Structure
+interface WizardProps {
+  initialData?: Partial<TradingPlan>;
+  onComplete: (plan: TradingPlan) => void;
+  onSaveDraft: (draft: Partial<TradingPlan>) => void;
+}
+
+class WizardContainer extends Component<WizardProps> {
+  // Manages wizard state and navigation
+  // Delegates to step components
+  // Handles validation orchestration
+}
+
+// Each step is a pure component
+const BasicInfoStep: FC<StepProps> = ({ data, onChange, errors }) => {
+  // Only handles its own section
+  // Emits changes upward
+  // Displays validation errors
+};
+```
+
+---
+
+## 4. Migration Strategy
+
+### 4.1 Phased Approach
+
+#### **Phase 0: Foundation (Week 1)**
+**Goal:** Development infrastructure without breaking changes
+
+- [ ] Initialize npm project
+- [ ] Install and configure Vite
+- [ ] Set up development server
+- [ ] Configure TypeScript (optional)
+- [ ] Add ESLint + Prettier
+- [ ] Create folder structure
+- [ ] Set up git hooks (Husky)
+
+**Deliverables:**
+- Running dev server
+- Build pipeline
+- Linting configured
+- Project structure
+
+**Success Metrics:**
+- `npm run dev` works
+- `npm run build` produces dist/
+- All existing features work via http://localhost
+
+#### **Phase 1: Module System (Week 2)**
+**Goal:** Convert to ES6 modules
+
+- [ ] Convert IIFE modules to ES6 exports
+- [ ] Create barrel exports
+- [ ] Add import maps
+- [ ] Remove global variables
+- [ ] Implement dependency injection
+- [ ] Add module tests
+
+**Before:**
+```javascript
+window.TradingPlan = (function() {
+  return { init: function() {} };
+})();
+```
+
+**After:**
+```typescript
+export class TradingPlan {
+  constructor(private storage: Storage) {}
+  async init(): Promise<void> {}
+}
+```
+
+**Success Metrics:**
+- No global variables except app root
+- All modules use import/export
+- Dependency graph documented
+
+#### **Phase 2: View Extraction (Week 3)**
+**Goal:** Extract HTML views into components
+
+- [ ] Create component system decision
+- [ ] Extract wizard views (4 steps)
+- [ ] Extract verdict view
+- [ ] Extract journal view
+- [ ] Extract saved plan view
+- [ ] Create component library
+
+**Component Options:**
+
+| Approach | Complexity | Bundle Size | Ecosystem | Learning Curve |
+|----------|------------|-------------|-----------|----------------|
+| Vanilla Web Components | Low | 0KB | Growing | Medium |
+| Lit | Medium | 5KB | Good | Low |
+| React | High | 45KB | Excellent | High |
+| Vue 3 | Medium | 35KB | Excellent | Medium |
+| Svelte | Medium | 10KB | Good | Low |
+
+**Recommendation:** Start with Lit, migrate to React if needed
+
+**Success Metrics:**
+- index.html < 100 lines
+- Each view is a component
+- Components are reusable
+
+#### **Phase 3: State Management (Week 4)**
+**Goal:** Centralized, reactive state
+
+- [ ] Implement state store
+- [ ] Migrate localStorage logic
+- [ ] Add state persistence layer
+- [ ] Implement state subscriptions
+- [ ] Add optimistic updates
+- [ ] Add undo/redo capability
+
+```typescript
+// Example State Store
+class AppStore {
+  private state = reactive({
+    user: null,
+    plans: [],
+    currentPlan: null,
+    journal: []
+  });
+  
+  @action
+  updatePlan(plan: TradingPlan) {
+    this.state.currentPlan = plan;
+    this.persist();
+    this.emit('plan:updated', plan);
+  }
+}
+```
+
+**Success Metrics:**
+- Single source of truth
+- Reactive UI updates
+- State persistence works
+- State can be exported/imported
+
+#### **Phase 4: Routing & Navigation (Week 5)**
+**Goal:** Client-side routing
+
+- [ ] Implement router
+- [ ] Define route structure
+- [ ] Add route guards
+- [ ] Implement lazy loading
+- [ ] Add breadcrumbs
+- [ ] Add deep linking
+
+```typescript
+const routes = [
+  { path: '/', component: () => import('./views/Home') },
+  { path: '/wizard', component: () => import('./views/Wizard') },
+  { path: '/plan/:id', component: () => import('./views/Plan') },
+  { path: '/verdict', component: () => import('./views/Verdict') },
+  { path: '/journal', component: () => import('./views/Journal') }
+];
+```
+
+**Success Metrics:**
+- Browser back/forward works
+- URLs are shareable
+- Route transitions are smooth
+- Protected routes work
+
+#### **Phase 5: Testing & Quality (Week 6)**
+**Goal:** Comprehensive test coverage
+
+- [ ] Unit tests for services
+- [ ] Component tests
+- [ ] Integration tests
+- [ ] E2E test suite
+- [ ] Performance tests
+- [ ] Accessibility audit
+
+```javascript
+// Example Test Structure
+describe('TradingPlan', () => {
+  it('validates required fields', () => {});
+  it('calculates risk correctly', () => {});
+  it('saves draft on change', () => {});
+});
+```
+
+**Success Metrics:**
+- 80% code coverage
+- All critical paths tested
+- CI/CD pipeline green
+- Zero accessibility violations
+
+#### **Phase 6: Optimization & Polish (Week 7)**
+**Goal:** Production readiness
+
+- [ ] Code splitting
+- [ ] Bundle optimization
+- [ ] Image optimization
+- [ ] PWA features
+- [ ] Error tracking
+- [ ] Analytics
+
+**Success Metrics:**
+- Lighthouse score > 95
+- Bundle size < 150KB
+- FCP < 1.5s
+- TTI < 2s
+
+---
+
+## 5. Implementation Details
+
+### 5.1 Breaking Changes
+
+| Feature | Current | New | Migration |
+|---------|---------|-----|-----------|
+| **URL Structure** | file:///index.html | http://localhost:5173 | Automatic redirect |
+| **Storage Keys** | Direct localStorage | Namespaced + versioned | Migration script |
+| **Global Functions** | window.__verdictEngine | Import from module | Deprecation period |
+| **Event Handlers** | Inline onclick | addEventListener | Automated replacement |
+
+### 5.2 Backward Compatibility
+
+```javascript
+// Compatibility layer during migration
+window.__LEGACY_API = {
+  verdict: {
+    evaluate: (...args) => {
+      console.warn('Deprecated: Use import { evaluate } from "@/verdict"');
+      return VerdictEngine.evaluate(...args);
+    }
+  }
+};
+```
+
+### 5.3 Data Migration
+
+```typescript
+class DataMigration {
+  async migrate() {
+    const version = localStorage.getItem('_version') || '1.0';
+    
+    const migrations = {
+      '1.0': this.migrateV1toV2,
+      '2.0': this.migrateV2toV3
+    };
+    
+    for (const [v, migration] of Object.entries(migrations)) {
+      if (v > version) await migration();
+    }
+  }
+  
+  private async migrateV1toV2() {
+    // Move flat keys to namespaced structure
+    const oldPlan = localStorage.getItem('tradingPlan_current');
+    if (oldPlan) {
+      await this.db.plans.add(JSON.parse(oldPlan));
+      localStorage.removeItem('tradingPlan_current');
+    }
+  }
+}
+```
+
+---
+
+## 6. Testing Strategy
+
+### 6.1 Test Pyramid
+
+```
+        E2E Tests (10%)
+       /              \
+      /  Integration   \
+     /    Tests (30%)   \
+    /                    \
+   /    Unit Tests (60%)  \
+  /_______________________\
+```
+
+### 6.2 Coverage Requirements
+
+| Component | Unit | Integration | E2E | Total |
+|-----------|------|-------------|-----|-------|
+| Services | 90% | 70% | - | 85% |
+| Components | 80% | 60% | - | 75% |
+| Stores | 95% | 80% | - | 90% |
+| Utils | 100% | - | - | 100% |
+| **Overall** | **85%** | **70%** | **Critical Paths** | **80%** |
+
+### 6.3 Test Scenarios
+
+```typescript
+// Critical E2E Tests
+describe('Trading Plan Wizard E2E', () => {
+  test('Complete wizard flow', async () => {
+    await page.goto('/wizard');
+    await fillStep1();
+    await fillStep2();
+    await fillStep3();
+    await page.click('[data-testid="save-plan"]');
+    await expect(page).toHaveURL('/plan/');
+  });
+  
+  test('Verdict evaluation', async () => {
+    await createPlan();
+    await page.goto('/verdict');
+    await page.fill('[data-testid="trade-input"]', 'Long MES 5000...');
+    await page.click('[data-testid="evaluate"]');
+    await expect(page.locator('[data-testid="score"]')).toContainText('85%');
+  });
+});
+```
+
+---
+
+## 7. Performance Requirements
+
+### 7.1 Performance Budget
+
+| Metric | Budget | Current | Required Improvement |
+|--------|--------|---------|---------------------|
+| **Bundle Size** | < 150KB gzipped | 285KB | 47% reduction |
+| **FCP** | < 1.5s | 2.8s | 46% improvement |
+| **TTI** | < 2.5s | 3.2s | 22% improvement |
+| **CLS** | < 0.1 | 0.15 | 33% improvement |
+| **FID** | < 100ms | 150ms | 33% improvement |
+
+### 7.2 Optimization Techniques
+
+```javascript
+// Code Splitting
+const TradingWizard = lazy(() => import('./components/TradingWizard'));
+
+// Tree Shaking
+export { specific, functions } from './utils'; // Not export *
+
+// Bundle Analysis
+npm run build -- --analyze
+
+// Compression
+{
+  build: {
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true
+      }
+    }
+  }
+}
+```
+
+---
+
+## 8. Security Requirements
+
+### 8.1 Security Measures
+
+| Threat | Mitigation | Implementation |
+|--------|------------|----------------|
+| XSS | Content Security Policy | Meta tags + headers |
+| Data Tampering | Input validation | Zod schemas |
+| CSRF | SameSite cookies | When API added |
+| Secrets | Environment variables | .env files |
+| Dependencies | Audit + updates | npm audit in CI |
+
+### 8.2 CSP Configuration
+
+```html
+<meta http-equiv="Content-Security-Policy" 
+      content="default-src 'self'; 
+               script-src 'self' 'unsafe-inline'; 
+               style-src 'self' 'unsafe-inline'; 
+               img-src 'self' data: blob:;">
+```
+
+---
+
+## 9. Rollout Plan
+
+### 9.1 Release Strategy
+
+| Stage | Duration | Users | Success Criteria |
+|-------|----------|-------|------------------|
+| **Alpha** | 2 weeks | Internal team (5) | No critical bugs |
+| **Beta** | 2 weeks | Early adopters (50) | < 5% error rate |
+| **GA** | Ongoing | All users | < 1% error rate |
+
+### 9.2 Feature Flags
+
+```typescript
+const features = {
+  newWizard: process.env.ENABLE_NEW_WIZARD === 'true',
+  reactComponents: process.env.ENABLE_REACT === 'true',
+  advancedJournal: isUserInBeta(user)
+};
+
+if (features.newWizard) {
+  return <NewWizard />;
+} else {
+  return <LegacyWizard />;
+}
+```
+
+### 9.3 Rollback Plan
+
+```bash
+# Automated rollback on >1% error rate
+if [ "$ERROR_RATE" -gt 1 ]; then
+  git revert $DEPLOYMENT_SHA
+  npm run deploy:previous
+  alert-team "Automatic rollback triggered"
+fi
+```
+
+---
+
+## 10. Success Metrics
+
+### 10.1 Technical KPIs
+
+| Metric | Baseline | Target | Measurement |
+|--------|----------|--------|-------------|
+| **Page Load Time** | 2.8s | < 1.5s | Google Analytics |
+| **Error Rate** | Unknown | < 0.5% | Sentry |
+| **Test Coverage** | 0% | > 80% | Jest/Vitest |
+| **Build Time** | N/A | < 30s | CI/CD |
+| **Bundle Size** | 285KB | < 150KB | Webpack Analyzer |
+
+### 10.2 Business KPIs
+
+| Metric | Baseline | Target | Measurement |
+|--------|----------|--------|-------------|
+| **Development Velocity** | 2 features/sprint | 5 features/sprint | JIRA |
+| **Bug Rate** | Unknown | < 2/sprint | Bug tracker |
+| **User Satisfaction** | N/A | > 4.5/5 | In-app survey |
+| **Time to Deploy** | Manual | < 10 min | CI/CD |
+
+### 10.3 Monitoring Dashboard
+
+```yaml
+Dashboards:
+  Technical:
+    - Real User Monitoring (RUM)
+    - Error rates by component
+    - Performance metrics (Core Web Vitals)
+    - Bundle size trends
+    
+  Business:
+    - Feature adoption rates
+    - User flow completion
+    - Error impact on users
+    - Development velocity
+```
+
+---
+
+## 11. Risk Analysis
+
+### 11.1 Risk Matrix
+
+| Risk | Probability | Impact | Mitigation |
+|------|------------|--------|------------|
+| **Regression bugs** | High | High | Comprehensive test suite + staged rollout |
+| **Performance degradation** | Medium | High | Performance budget + monitoring |
+| **User confusion** | Medium | Medium | Feature flags + gradual migration |
+| **Data loss** | Low | Critical | Backup + migration scripts + validation |
+| **Build complexity** | Medium | Low | Documentation + training |
+| **Team resistance** | Low | Medium | Involve team early + training |
+
+### 11.2 Contingency Plans
+
+```javascript
+// Data corruption recovery
+async function recoverFromCorruption() {
+  const backup = await loadBackup();
+  const valid = await validateData(backup);
+  if (valid) {
+    await restoreData(backup);
+    logIncident('Data recovered from backup');
+  } else {
+    await resetToDefaults();
+    alertUser('Data reset to defaults');
+  }
+}
+```
+
+---
+
+## 12. Resource Requirements
+
+### 12.1 Team Allocation
+
+| Role | FTE | Duration | Responsibilities |
+|------|-----|----------|------------------|
+| **Tech Lead** | 1.0 | 7 weeks | Architecture, code review |
+| **Senior Developer** | 2.0 | 7 weeks | Core implementation |
+| **Frontend Developer** | 1.0 | 5 weeks | Component development |
+| **QA Engineer** | 0.5 | 4 weeks | Test automation |
+| **DevOps** | 0.25 | 2 weeks | CI/CD setup |
+| **Product Manager** | 0.25 | 7 weeks | Requirements, acceptance |
+
+**Total:** 5 FTE for 7 weeks = 35 person-weeks
+
+### 12.2 Tools & Services
+
+| Service | Purpose | Cost/Month | Required |
+|---------|---------|------------|----------|
+| **Vercel** | Hosting + Preview | $20 | Yes |
+| **Sentry** | Error tracking | $26 | Yes |
+| **GitHub Actions** | CI/CD | Free | Yes |
+| **BrowserStack** | Cross-browser testing | $39 | Optional |
+| **DataDog** | APM + Monitoring | $31 | Optional |
+
+**Total:** ~$77/month required, ~$147/month with optional
+
+### 12.3 Training Requirements
+
+```markdown
+## Training Plan
+1. **ES6 Modules & Modern JS** (4 hours)
+   - Import/Export patterns
+   - Async/Await
+   - Destructuring
+
+2. **Vite & Build Tools** (2 hours)
+   - Development server
+   - Build configuration
+   - Environment variables
+
+3. **Component Architecture** (4 hours)
+   - Component design
+   - Props vs State
+   - Composition patterns
+
+4. **Testing** (4 hours)
+   - Unit testing with Vitest
+   - Component testing
+   - E2E with Playwright
+```
+
+---
+
+## 13. Timeline
+
+### 13.1 Gantt Chart
+
+```
+Week 1  █████░░░░░░░░░░░░░░░  Foundation
+Week 2  ░░░░░█████░░░░░░░░░░  Module System
+Week 3  ░░░░░░░░░░█████░░░░░  View Extraction
+Week 4  ░░░░░░░░░░░░░░░█████  State Management
+Week 5  ░░░░░░░░░░░░█████░░░  Routing
+Week 6  ░░░░░░░░░░░░░░░█████  Testing
+Week 7  ░░░░░░░░░░░░░░░░░░██  Optimization
+
+        ━━━━━━━━━━━━━━━━━━━━━
+        Alpha        Beta  GA→
+```
+
+### 13.2 Milestones
+
+| Milestone | Date | Criteria | Go/No-Go |
+|-----------|------|----------|----------|
+| **M1: Dev Environment** | Week 1 | Vite running, structure created | Tech Lead |
+| **M2: Modules Complete** | Week 2 | No globals, all ES6 | Code Review |
+| **M3: Components Working** | Week 3 | All views extracted | Product |
+| **M4: State Managed** | Week 4 | Reactive updates working | Tech Lead |
+| **M5: Alpha Release** | Week 5 | Core features working | Team |
+| **M6: Beta Release** | Week 6 | Tests passing, <1% errors | Product |
+| **M7: GA Release** | Week 7 | All metrics met | Stakeholders |
+
+---
+
+## 14. Acceptance Criteria
+
+### 14.1 Definition of Done
+
+- [ ] Code reviewed and approved
+- [ ] Unit tests written and passing (>80% coverage)
+- [ ] Integration tests passing
+- [ ] Documentation updated
+- [ ] Performance budget met
+- [ ] Accessibility audit passed (WCAG 2.1 AA)
+- [ ] Security scan passed
+- [ ] Deployed to staging
+- [ ] Product owner acceptance
+- [ ] Monitoring configured
+
+### 14.2 Launch Criteria
+
+```typescript
+const launchCriteria = {
+  technical: {
+    testCoverage: coverage >= 80,
+    errorRate: errors < 0.01,
+    performance: lighthouse >= 95,
+    bundleSize: size <= 150_000
+  },
+  business: {
+    featuresComplete: implemented === planned,
+    documentationReady: docs.isComplete(),
+    teamTrained: training.attendance === 100,
+    rollbackReady: canRevert === true
+  }
+};
+
+const canLaunch = Object.values(launchCriteria)
+  .every(category => Object.values(category).every(Boolean));
+```
+
+---
+
+## 15. Appendices
+
+### Appendix A: Technical Decisions
+
+| Decision | Options Considered | Choice | Rationale |
+|----------|-------------------|--------|-----------|
+| **Framework** | React, Vue, Svelte, Web Components | React (later) | Ecosystem, hiring, community |
+| **Build Tool** | Webpack, Vite, Parcel, esbuild | Vite | Speed, simplicity, ESM-first |
+| **State Mgmt** | Redux, Zustand, MobX, Context | Zustand | Simple, TypeScript, small |
+| **Testing** | Jest, Vitest, Mocha | Vitest | Vite integration, speed |
+| **CSS** | Tailwind, CSS Modules, styled-components | Tailwind + Modules | Utility-first + scoping |
+
+### Appendix B: Migration Scripts
+
+```bash
+#!/bin/bash
+# migrate.sh - Run all migrations
+
+echo "Starting migration..."
+
+# Backup current state
+npm run backup
+
+# Run data migrations
+npm run migrate:data
+
+# Update configuration
+npm run migrate:config
+
+# Validate migration
+npm run validate:migration
+
+if [ $? -eq 0 ]; then
+  echo "Migration successful!"
+else
+  echo "Migration failed, rolling back..."
+  npm run rollback
+  exit 1
+fi
+```
+
+### Appendix C: Component Inventory
+
+| Current View | New Component | Priority | Complexity |
+|--------------|---------------|----------|------------|
+| Wizard Step 1 | BasicInfoForm | P0 | Low |
+| Wizard Step 2 | TradingSetups | P0 | Medium |
+| Wizard Step 3 | RiskManagement | P0 | High |
+| Wizard Step 4 | ReviewConfirm | P0 | Low |
+| Verdict Form | VerdictEvaluator | P0 | Medium |
+| Journal Table | JournalGrid | P1 | High |
+| Stats Dashboard | Statistics | P1 | Medium |
+| Settings Modal | SettingsPanel | P2 | Low |
+
+### Appendix D: API Design (Future)
+
+```typescript
+// Future API structure when backend is added
+interface API {
+  plans: {
+    list(): Promise<Plan[]>;
+    get(id: string): Promise<Plan>;
+    create(plan: Plan): Promise<Plan>;
+    update(id: string, plan: Partial<Plan>): Promise<Plan>;
+    delete(id: string): Promise<void>;
+  };
+  
+  journal: {
+    entries(filters?: Filters): Promise<Entry[]>;
+    addEntry(entry: Entry): Promise<Entry>;
+    updateEntry(id: string, entry: Partial<Entry>): Promise<Entry>;
+    stats(planId: string): Promise<Statistics>;
+  };
+}
+```
+
+---
+
+## 16. Approval & Sign-off
+
+### Stakeholder Approval
+
+| Role | Name | Signature | Date |
+|------|------|-----------|------|
+| **Product Manager** | ___________ | ___________ | _____ |
+| **Tech Lead** | ___________ | ___________ | _____ |
+| **Engineering Manager** | ___________ | ___________ | _____ |
+| **QA Lead** | ___________ | ___________ | _____ |
+| **DevOps Lead** | ___________ | ___________ | _____ |
+
+### Document History
+
+| Version | Date | Author | Changes |
+|---------|------|--------|---------|
+| 0.1 | Draft | Engineering | Initial draft |
+| 0.2 | Review | Tech Lead | Added technical details |
+| 0.3 | Review | Product | Added business metrics |
+| 1.0 | Current | Team | Final version |
+
+---
+
+**Next Steps:**
+1. Review with stakeholders
+2. Gather feedback and iterate
+3. Get formal approval
+4. Create JIRA epics and stories
+5. Schedule kick-off meeting
+6. Begin Phase 0 implementation
+
+**Questions/Comments:** Contact Tech Lead or use #trading-wizard-refactor Slack channel
+
+---
+
+## 17. Feasibility Review and Multi‑Team Execution Plan (All Teams)
+
+### 17.1 Executive Summary (Feasibility)
+- Feasibility: High. The refactor is achievable within 7 weeks using standard web tooling (Vite, Lit/React, Vitest, Playwright) and the roles listed in `team/`.
+- Constraints: Requires move from file:// to http:// for development and QA; introduces minimal Node-based toolchain and CI.
+- Impact: `public/index.html` trimmed to < 100 lines; components extracted; tests established; CI/CD added; performance budget enforced.
+
+### 17.2 Phase-by-Phase Plan with Roles and Outputs
+- Phase 0: Foundation (Week 1)
+  - Primary: DevOps Engineer; Staff Engineer; Frontend Engineer
+  - Support: Product Manager; QA Engineer
+  - Outputs: Vite skeleton, npm scripts, ESLint/Prettier, optional TS, directory layout, HMR dev server, Git hooks
+  - Exit Gate: `npm run dev` + `npm run build` green; CI lints/build passing
+
+- Phase 1: Module System (Week 2)
+  - Primary: Staff Engineer; Frontend Engineer
+  - Support: Backend Engineer; QA Automation Engineer
+  - Outputs: ES modules, DI for services, barrel exports, unit tests
+  - Exit Gate: No globals except app root; unit tests green; dependency graph documented
+
+- Phase 2: View Extraction (Week 3)
+  - Primary: Frontend Engineer; UX/UI Designer
+  - Support: Product Manager; QA Engineer
+  - Outputs: Wizard, Verdict, Journal, Saved Plan components (Lit baseline); `public/index.html` < 100 lines
+  - Exit Gate: Functional parity on dev server; smoke test pass
+
+- Phase 3: State Management (Week 4)
+  - Primary: Staff Engineer; Frontend Engineer
+  - Support: Data Engineer (if IndexedDB), QA Automation Engineer
+  - Outputs: Central store (Zustand/Context), namespaced persistence, export/import, undo/redo stubs
+  - Exit Gate: Reactive updates verified; integration tests pass
+
+- Phase 4: Routing & Navigation (Week 5)
+  - Primary: Frontend Engineer
+  - Support: UX/UI Designer; QA roles
+  - Outputs: Client router, guards, lazy chunks
+  - Exit Gate: Back/forward works; shareable URLs; lazy routes verified
+
+- Phase 5: Testing & Quality (Week 6)
+  - Primary: QA Automation Engineer; QA Engineer
+  - Support: Frontend Engineer
+  - Outputs: Vitest (unit/int), Playwright E2E, a11y checks
+  - Exit Gate: ≥80% overall coverage; E2E happy paths green in CI
+
+- Phase 6: Optimization & Polish (Week 7)
+  - Primary: Staff Engineer; Frontend Engineer; SRE
+  - Support: DevOps Engineer
+  - Outputs: Code splitting, bundle budgets, Lighthouse ≥95, PWA optional
+  - Exit Gate: Bundle ≤150KB gz; FCP < 1.5s; TTI < 2.0s
+
+### 17.3 RACI by Workstream
+- Tooling/CI: R=DevOps, Staff Eng; A=VP‑Eng; C=Frontend, QA‑Auto; I=PM
+- Components/UX: R=Frontend, UX/UI; A=CTO; C=PM, QA; I=VP‑Product
+- State/Persistence: R=Staff Eng, Frontend; A=CTO; C=Data Eng, QA‑Auto; I=PM
+- Testing: R=QA‑Auto, QA; A=VP‑Eng; C=Frontend, SRE; I=PM
+- Performance/Monitoring: R=SRE, Staff Eng; A=CTO; C=DevOps, Frontend; I=VP‑Product
+
+### 17.4 Resource Plan (confirm with §12.1)
+- Keep 35 person‑weeks. Add SRE 0.25 FTE in Week 6; QA‑Auto active Weeks 2–6.
+
+### 17.5 Risks & Mitigations
+- Scope creep: Freeze framework switch until Lit baseline meets budgets; PM change control.
+- Dev mode shift: Provide one‑click scripts/docs; maintain legacy `index.html` until Phase 3 parity.
+- Test flakiness: Quarantine policy; deterministic seeds; network isolation in E2E.
+- Perf regressions: Perf budgets in CI; analyzer in Week 6.
+
+### 17.6 Weekly Go/No‑Go Gates
+- W1 dev+build+CI green; W2 no globals+unit tests; W3 view parity+index<100; W4 store verified; W5 routing/lazy; W6 ≥80% cov; W7 perf budgets
+
+### 17.7 Deliverables by Week
+- W1: Vite, CI, lint; W2: services+tests; W3: components+trimmed index; W4: stores+int tests; W5: routes+E2E nav; W6: full tests+a11y; W7: split+budgets+LH report
+
+### 17.8 Acceptance & QA Gates
+- QA Engineer publishes manual results; QA‑Auto wires CI gates/reports; VP‑Eng flips status after QA Pass; PM verifies copy/flows.
+
+### 17.9 Operational Notes
+- Index length acceptable short‑term; goal < 100 lines after Phase 3.
+- Roadmap: Track as new epic; mirror markdown and HTML roadmap per PRD policy.
+
+### 17.10 Next Actions
+- Scaffold Vite + CI; finalize component inventory; lock Lit for baseline; seed unit tests and coverage thresholds.

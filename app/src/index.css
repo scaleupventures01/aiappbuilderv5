@@ -1,0 +1,197 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Desktop-first global styles */
+@layer base {
+  :root {
+    /* Desktop-optimized color palette */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.5rem;
+    
+    /* Trading-specific colors */
+    --trading-green: 142 71% 45%;
+    --trading-red: 0 84% 60%;
+    --trading-neutral: 215 16% 47%;
+    
+    /* Desktop layout variables */
+    --sidebar-width: 280px;
+    --header-height: 64px;
+    --chat-panel-width: 400px;
+    --min-desktop-width: 1200px;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 94.1%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    min-width: var(--min-desktop-width);
+  }
+
+  /* Desktop-optimized scrollbars */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.5);
+  }
+}
+
+/* Desktop layout utilities */
+@layer components {
+  .desktop-layout {
+    @apply min-h-screen grid;
+    grid-template-columns: var(--sidebar-width) 1fr var(--chat-panel-width);
+    grid-template-rows: var(--header-height) 1fr;
+    grid-template-areas: 
+      "sidebar header chat-header"
+      "sidebar main chat-panel";
+  }
+
+  .desktop-sidebar {
+    grid-area: sidebar;
+    @apply bg-card border-r border-border;
+  }
+
+  .desktop-header {
+    grid-area: header;
+    @apply bg-background border-b border-border flex items-center px-6;
+  }
+
+  .desktop-main {
+    grid-area: main;
+    @apply bg-background overflow-auto;
+  }
+
+  .desktop-chat-header {
+    grid-area: chat-header;
+    @apply bg-card border-b border-l border-border flex items-center px-4;
+  }
+
+  .desktop-chat-panel {
+    grid-area: chat-panel;
+    @apply bg-card border-l border-border flex flex-col;
+  }
+
+  /* Trading-specific components */
+  .trade-entry-quick {
+    @apply fixed bottom-6 right-6 z-50;
+  }
+
+  .psychology-sidebar {
+    @apply w-80 bg-card border-l border-border flex flex-col;
+  }
+
+  .training-panel {
+    @apply bg-secondary/50 border border-border rounded-lg p-6;
+  }
+
+  /* Keyboard shortcuts indicators */
+  .kbd {
+    @apply inline-flex items-center justify-center px-2 py-1 text-xs font-medium bg-muted text-muted-foreground border border-border rounded;
+  }
+}
+
+/* Desktop-first responsive breakpoints */
+@layer utilities {
+  /* Only apply mobile styles as overrides for very small screens */
+  @media (max-width: 1199px) {
+    body {
+      min-width: 1200px;
+      overflow-x: auto;
+    }
+    
+    .desktop-layout {
+      min-width: 1200px;
+    }
+  }
+  
+  /* Large desktop optimizations */
+  @media (min-width: 1600px) {
+    :root {
+      --sidebar-width: 320px;
+      --chat-panel-width: 480px;
+    }
+  }
+  
+  @media (min-width: 1920px) {
+    :root {
+      --sidebar-width: 360px;
+      --chat-panel-width: 520px;
+    }
+  }
+}
+
+/* Focus management for desktop */
+@layer utilities {
+  .focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+  
+  /* Trading context indicators */
+  .trade-context {
+    @apply bg-trading-neutral/10 border-l-4 border-trading-neutral pl-4;
+  }
+  
+  .trade-context.profit {
+    @apply bg-trading-green/10 border-trading-green text-trading-green;
+  }
+  
+  .trade-context.loss {
+    @apply bg-trading-red/10 border-trading-red text-trading-red;
+  }
+}

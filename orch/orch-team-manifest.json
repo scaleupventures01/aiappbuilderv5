@@ -1,0 +1,356 @@
+{
+  "manifest_version": "1.0.0",
+  "last_updated": "2024-12-20",
+  "total_agents": 34,
+  "validation_status": "complete",
+  "agents": {
+    "ai-engineer": {
+      "name": "AI Engineer",
+      "domain": "engineering",
+      "expertise": ["AI/ML systems", "model deployment", "inference optimization"],
+      "priority": "core",
+      "dependencies": ["data-engineer", "mlops-engineer"]
+    },
+    "ai-product-manager": {
+      "name": "AI Product Manager",
+      "domain": "product",
+      "expertise": ["AI product strategy", "ML feature planning", "AI ethics"],
+      "priority": "core",
+      "dependencies": ["product-manager", "ai-engineer"]
+    },
+    "ai-safety-engineer": {
+      "name": "AI Safety Engineer",
+      "domain": "safety",
+      "expertise": ["AI safety", "harm prevention", "crisis detection", "bias mitigation"],
+      "priority": "critical",
+      "dependencies": [],
+      "alert": "CRITICAL: Required for psychology AI features"
+    },
+    "application-security-engineer": {
+      "name": "Application Security Engineer",
+      "domain": "security",
+      "expertise": ["application security", "vulnerability assessment", "secure coding"],
+      "priority": "critical",
+      "dependencies": ["security-architect"]
+    },
+    "backend-engineer": {
+      "name": "Backend Engineer",
+      "domain": "engineering",
+      "expertise": ["API development", "database design", "server architecture"],
+      "priority": "core",
+      "dependencies": []
+    },
+    "business-analyst": {
+      "name": "Business Analyst",
+      "domain": "business",
+      "expertise": ["requirements analysis", "business case", "unit economics", "market analysis"],
+      "priority": "critical",
+      "dependencies": [],
+      "alert": "CRITICAL: Validates business viability"
+    },
+    "chief-ai-officer": {
+      "name": "Chief AI Officer",
+      "domain": "leadership",
+      "expertise": ["AI strategy", "AI governance", "ethical AI", "AI risk management"],
+      "priority": "strategic",
+      "dependencies": ["ai-safety-engineer", "ai-engineer"]
+    },
+    "ciso": {
+      "name": "Chief Information Security Officer",
+      "domain": "security",
+      "expertise": ["security strategy", "compliance", "risk management", "incident response"],
+      "priority": "critical",
+      "dependencies": [],
+      "alert": "CRITICAL: Executive security oversight required"
+    },
+    "cto": {
+      "name": "Chief Technology Officer",
+      "domain": "leadership",
+      "expertise": ["technical strategy", "architecture decisions", "technology roadmap"],
+      "priority": "strategic",
+      "dependencies": []
+    },
+    "data-analyst": {
+      "name": "Data Analyst",
+      "domain": "data",
+      "expertise": ["data analysis", "metrics", "reporting", "insights"],
+      "priority": "support",
+      "dependencies": ["data-engineer"]
+    },
+    "data-engineer": {
+      "name": "Data Engineer",
+      "domain": "data",
+      "expertise": ["data pipelines", "ETL", "data warehouse", "streaming"],
+      "priority": "core",
+      "dependencies": []
+    },
+    "data-scientist": {
+      "name": "Data Scientist",
+      "domain": "data",
+      "expertise": ["statistical analysis", "predictive modeling", "experimentation"],
+      "priority": "core",
+      "dependencies": ["data-engineer"]
+    },
+    "devops-engineer": {
+      "name": "DevOps Engineer",
+      "domain": "operations",
+      "expertise": ["CI/CD", "infrastructure", "automation", "deployment"],
+      "priority": "core",
+      "dependencies": []
+    },
+    "devsecops-engineer": {
+      "name": "DevSecOps Engineer",
+      "domain": "security",
+      "expertise": ["secure CI/CD", "security automation", "compliance automation"],
+      "priority": "critical",
+      "dependencies": ["devops-engineer"],
+      "alert": "CRITICAL: Security in deployment pipeline"
+    },
+    "frontend-engineer": {
+      "name": "Frontend Engineer",
+      "domain": "engineering",
+      "expertise": ["UI development", "React", "user interfaces", "web performance"],
+      "priority": "core",
+      "dependencies": []
+    },
+    "full-stack-engineer": {
+      "name": "Full-Stack Engineer",
+      "domain": "engineering",
+      "expertise": ["end-to-end development", "integration", "full system implementation"],
+      "priority": "core",
+      "dependencies": ["frontend-engineer", "backend-engineer"]
+    },
+    "implementation-owner": {
+      "name": "Implementation Owner",
+      "domain": "management",
+      "expertise": ["feature ownership", "implementation coordination", "delivery"],
+      "priority": "support",
+      "dependencies": []
+    },
+    "machine-learning-engineer": {
+      "name": "Machine Learning Engineer",
+      "domain": "ml",
+      "expertise": ["ML systems", "model training", "ML infrastructure"],
+      "priority": "core",
+      "dependencies": ["data-engineer"]
+    },
+    "ml-research-scientist": {
+      "name": "ML Research Scientist",
+      "domain": "ml",
+      "expertise": ["ML research", "algorithm development", "model innovation"],
+      "priority": "optimization",
+      "dependencies": ["machine-learning-engineer"]
+    },
+    "mlops-engineer": {
+      "name": "MLOps Engineer",
+      "domain": "ml",
+      "expertise": ["ML operations", "model deployment", "ML monitoring", "ML pipelines"],
+      "priority": "core",
+      "dependencies": ["machine-learning-engineer", "devops-engineer"]
+    },
+    "privacy-engineer": {
+      "name": "Privacy Engineer",
+      "domain": "compliance",
+      "expertise": ["GDPR", "HIPAA", "privacy by design", "data protection"],
+      "priority": "critical",
+      "dependencies": [],
+      "alert": "CRITICAL: Required for mental health data compliance"
+    },
+    "product-manager": {
+      "name": "Product Manager",
+      "domain": "product",
+      "expertise": ["product strategy", "roadmap", "user stories", "prioritization"],
+      "priority": "core",
+      "dependencies": []
+    },
+    "project-manager": {
+      "name": "Project Manager",
+      "domain": "management",
+      "expertise": ["project planning", "timeline management", "risk management", "coordination"],
+      "priority": "critical",
+      "dependencies": [],
+      "alert": "CRITICAL: Prevents scope creep and timeline failures"
+    },
+    "qa-automation-engineer": {
+      "name": "QA Automation Engineer",
+      "domain": "quality",
+      "expertise": ["test automation", "CI/CD testing", "performance testing"],
+      "priority": "core",
+      "dependencies": ["qa-engineer"]
+    },
+    "qa-engineer": {
+      "name": "QA Engineer",
+      "domain": "quality",
+      "expertise": ["test planning", "test execution", "quality assurance", "bug tracking"],
+      "priority": "core",
+      "dependencies": []
+    },
+    "security-architect": {
+      "name": "Security Architect",
+      "domain": "security",
+      "expertise": ["security architecture", "threat modeling", "security controls"],
+      "priority": "critical",
+      "dependencies": [],
+      "alert": "CRITICAL: Designs security foundation"
+    },
+    "site-reliability-engineer": {
+      "name": "Site Reliability Engineer",
+      "domain": "operations",
+      "expertise": ["reliability", "monitoring", "incident response", "SLOs"],
+      "priority": "core",
+      "dependencies": ["devops-engineer"]
+    },
+    "staff-engineer": {
+      "name": "Staff Engineer",
+      "domain": "engineering",
+      "expertise": ["technical leadership", "architecture", "complex problem solving"],
+      "priority": "strategic",
+      "dependencies": []
+    },
+    "technical-product-manager": {
+      "name": "Technical Product Manager",
+      "domain": "product",
+      "expertise": ["technical requirements", "API design", "technical roadmap"],
+      "priority": "core",
+      "dependencies": ["product-manager"]
+    },
+    "ux-researcher": {
+      "name": "UX Researcher",
+      "domain": "design",
+      "expertise": ["user research", "usability testing", "user insights"],
+      "priority": "optimization",
+      "dependencies": []
+    },
+    "ux-ui-designer": {
+      "name": "UX/UI Designer",
+      "domain": "design",
+      "expertise": ["user experience", "interface design", "design systems"],
+      "priority": "core",
+      "dependencies": ["ux-researcher"]
+    },
+    "vp-engineering": {
+      "name": "VP Engineering",
+      "domain": "leadership",
+      "expertise": ["engineering leadership", "team building", "delivery management"],
+      "priority": "strategic",
+      "dependencies": []
+    },
+    "vp-product": {
+      "name": "VP Product",
+      "domain": "leadership",
+      "expertise": ["product leadership", "product strategy", "market fit"],
+      "priority": "strategic",
+      "dependencies": []
+    }
+  },
+  "domain_groups": {
+    "critical_safety_security": [
+      "ai-safety-engineer",
+      "ciso",
+      "security-architect",
+      "application-security-engineer",
+      "devsecops-engineer",
+      "privacy-engineer"
+    ],
+    "leadership": [
+      "cto",
+      "vp-engineering",
+      "vp-product",
+      "chief-ai-officer"
+    ],
+    "engineering": [
+      "staff-engineer",
+      "backend-engineer",
+      "frontend-engineer",
+      "full-stack-engineer",
+      "ai-engineer"
+    ],
+    "ml_ai": [
+      "machine-learning-engineer",
+      "ml-research-scientist",
+      "mlops-engineer",
+      "ai-engineer",
+      "data-scientist"
+    ],
+    "product": [
+      "product-manager",
+      "technical-product-manager",
+      "ai-product-manager"
+    ],
+    "operations": [
+      "devops-engineer",
+      "site-reliability-engineer",
+      "devsecops-engineer"
+    ],
+    "quality": [
+      "qa-engineer",
+      "qa-automation-engineer"
+    ],
+    "data": [
+      "data-engineer",
+      "data-analyst",
+      "data-scientist"
+    ],
+    "design": [
+      "ux-ui-designer",
+      "ux-researcher"
+    ],
+    "business": [
+      "business-analyst",
+      "project-manager"
+    ]
+  },
+  "invocation_rules": {
+    "whole_team": {
+      "description": "Invokes all 34 agents",
+      "agents": "all",
+      "confirmation_required": true,
+      "estimated_time": "20-25 minutes"
+    },
+    "security_review": {
+      "description": "All security and compliance agents",
+      "agents": ["ciso", "security-architect", "application-security-engineer", "devsecops-engineer", "privacy-engineer", "ai-safety-engineer"],
+      "confirmation_required": true
+    },
+    "leadership_review": {
+      "description": "All leadership and strategic roles",
+      "agents": ["cto", "vp-engineering", "vp-product", "chief-ai-officer"],
+      "confirmation_required": false
+    },
+    "technical_review": {
+      "description": "Core technical team",
+      "agents": ["staff-engineer", "backend-engineer", "frontend-engineer", "full-stack-engineer", "devops-engineer", "site-reliability-engineer"],
+      "confirmation_required": false
+    },
+    "product_review": {
+      "description": "Product and design team",
+      "agents": ["product-manager", "technical-product-manager", "ai-product-manager", "ux-ui-designer", "ux-researcher"],
+      "confirmation_required": false
+    },
+    "ai_ml_review": {
+      "description": "AI/ML specialists",
+      "agents": ["ai-engineer", "machine-learning-engineer", "ml-research-scientist", "mlops-engineer", "ai-safety-engineer", "data-scientist"],
+      "confirmation_required": false
+    },
+    "compliance_review": {
+      "description": "Compliance and legal requirements",
+      "agents": ["privacy-engineer", "ciso", "security-architect", "ai-safety-engineer"],
+      "confirmation_required": true
+    }
+  },
+  "excluded_files": [
+    "rca-10-whys-prompt.md"
+  ],
+  "validation": {
+    "minimum_for_complete_review": 30,
+    "critical_agents_always_include": [
+      "ai-safety-engineer",
+      "privacy-engineer",
+      "ciso",
+      "business-analyst",
+      "project-manager"
+    ],
+    "warn_if_missing": true,
+    "block_if_critical_missing": true
+  }
+}

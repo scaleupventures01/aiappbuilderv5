@@ -1,0 +1,124 @@
+Trading Rehab Plan & MFE Tracking Guide
+1. Purpose
+A structured, faith‑anchored roadmap to rebuild consistency, protect capital, and scale from one‑lot MES trades to your seven‑lot ladder, while mastering stop‑loss execution and Maximum Favorable Excursion (MFE).
+2. Return‑to‑Risk Ladder
+Phase
+Equity Band
+Contracts
+$ Risk / Trade
+% Equity Risk
+Progression Gate
+0 • SIM Reset
+n/a
+Sim
+$0
+0 %
+30 demo trades ≥ 90 % rule score
+1 • Spark
+$500 – $649
+1
+$30
+6 %
++5 R net and ≤ 2 plan violations / 20 trades
+2 • Stabilize
+$650 – $899
+1
+$30
+3.3 – 4.6 %
++10 R net, 20‑trade average MFE‑error ≤ 0.4 R
+3 • Dual‑Micro
+$900 – $1 199
+2
+$60
+5.0 – 6.6 %
+25‑trade sample win‑rate within 5 pts of back‑test
+4 • Growth
+$1 200 – $1 999
+2
+$60
+3.0 – 5.0 %
+Equity curve higher‑lows 4 straight weeks
+5 • Tri‑Micro
+$2 000 – $3 499
+3
+$90
+2.6 – 4.5 %
+40 R cumulative edge; < 2 psych errors / week
+6 • Scale‑Up
+$3 500 – $4 999
+4
+$120
+2.4 – 3.4 %
+60‑day expectancy ≥ 0.35 R
+7 • Diamond Tier
+≥ $5 000
+5 – 7
+$150 – $210
+≤ 3 %
+Prop‑funding consistency & drawdown metrics met
+
+Safety Rails
+Drop‑Back Rule: –3 R in a day → finish flat and revert one phase next session.
+Daily Loss Cap: never exceed –6 % of current equity.
+3. Daily Rehab Routine (30 min Pre‑Market)
+Visualization (5 min) – Read one A‑setup; picture ideal entry and exit.
+Market Mapping (10 min) – Mark ES zones; delete noise.
+Breath & Verse (5 min) – 4‑7‑8 breathing; aloud recite “For the Spirit God gave us …” — 2 Timothy 1 : 7.
+Expectation Neutraliser (5 min) – Write: “Outcome is God’s sovereignty; obedience is my worship.”
+Risk Check (5 min) – Confirm fixed $ risk and stop size ≥ calibrated rule.
+After the session: grade every trade ♦ / 🔥 / 💀, note trigger, journal lesson.
+4. MFE Tracking Guide
+4.1 Key Definitions
+MFE (Maximum Favorable Excursion): Highest unrealized profit a trade reaches before exit.
+MFE‑Error: MFE minus actual profit captured. Express in R:
+[(MFE – Net P/L) ÷ Stop $].
+4.2 How to Capture MFE
+A. NinjaTrader Trade Performance (preferred)
+Control Center ➜ New ▸ Trade Performance.
+Set date range ➜ Generate.
+In Trades view, right‑click header ➜ Add Column ▸ MFE.
+Export ➜ Excel/CSV.
+In the spreadsheet add formulas:
+$ MFE‑Error: =MFE - NetProfit
+R MFE‑Error: =(MFE - NetProfit)/ABS(Stop$)
+B. TradingView Script (optional)
+Add indicator “MFE & MAE Tool” by QuantNomad.
+Displays MFE/MAE dots on chart. For data study, still export fills from NinjaTrader.
+4.3 Tracker Template
+#
+Date
+Setup
+Stop $
+Net P/L $
+MFE $
+MFE‑Error $
+MFE‑Error R
+Note
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Progress Gate: Maintain a 20‑trade rolling average MFE‑Error ≤ 0.4 R before advancing to the next ladder phase.
+5. Reflection Prompts
+Which phase feels “too slow,” and what belief fuels that feeling?
+When you see the MFE left on the table, what emotion does it trigger? How will you respond next time?
+6. Spiritual Anchors
+“Whoever can be trusted with very little can also be trusted with much, and whoever is dishonest with very little will also be dishonest with much.” — Luke 16 : 10
+“Do not fear, for I am with you; do not be dismayed, for I am your God. I will strengthen you and help you; I will uphold you with my righteous right hand.” — Isaiah 41 : 10
+Stay diligent; daily faithfulness compounds into seven‑figure stewardship.
+

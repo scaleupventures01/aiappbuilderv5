@@ -1,0 +1,286 @@
+# ORCH Team Configuration
+# This file ensures complete team invocation and prevents missing critical agents
+
+version: 1.0.0
+last_updated: 2024-12-20
+
+# Core Settings
+team_settings:
+  discovery_mode: dynamic  # Always discover agents dynamically, never use static counts
+  verify_completeness: true
+  show_confirmation: true
+  show_progress: true
+  max_concurrent_agents: 10
+  require_manifest_validation: true
+  
+# Agent Discovery Settings  
+discovery:
+  base_path: "/orch/team/"
+  file_pattern: "*.md"
+  exclude_patterns:
+    - "rca-*.md"
+    - "template-*.md"
+    - "README.md"
+  validate_agent_structure: true
+  cache_manifest: true
+  cache_duration_minutes: 60
+
+# Invocation Aliases - Multiple ways users might request the whole team
+invocation_aliases:
+  whole_team: 
+    - "all agents"
+    - "everyone"
+    - "full team"
+    - "complete team"
+    - "entire team"
+    - "all 34 agents"
+    - "every agent"
+    - "comprehensive review"
+  
+  security_team:
+    - "security review"
+    - "security audit"
+    - "security assessment"
+    - "compliance check"
+  
+  leadership:
+    - "executives"
+    - "leadership team"
+    - "strategic review"
+    - "c-suite"
+
+# Safety Checks and Validations
+safety_checks:
+  # Confirmation thresholds
+  require_confirmation_above: 10
+  require_double_confirmation_above: 25
+  
+  # Critical agents that must never be excluded
+  mandatory_agents_for_financial_platform:
+    - ai-safety-engineer
+    - privacy-engineer
+    - ciso
+    - security-architect
+    - business-analyst
+    - project-manager
+  
+  # Warnings
+  warn_on_missing_agents: true
+  warn_on_partial_invocation: true
+  block_if_critical_missing: true
+  
+  # If one agent from a group is included, include all
+  complete_groups:
+    security: 
+      trigger_agents: [ciso, security-architect]
+      must_include: [application-security-engineer, devsecops-engineer, privacy-engineer]
+    
+    ai_safety:
+      trigger_agents: [ai-engineer]
+      must_include: [ai-safety-engineer, mlops-engineer]
+    
+    compliance:
+      trigger_agents: [privacy-engineer]
+      must_include: [ciso, security-architect]
+
+# Resource Management
+resource_management:
+  # Time estimates (in minutes)
+  time_per_agent: 0.5
+  time_overhead: 2
+  
+  # Cost estimates
+  estimated_cost_per_agent: 0.10
+  
+  # Warnings
+  warn_thresholds:
+    agents: 15
+    time_minutes: 10
+    cost_dollars: 2.00
+  
+  # Hard limits
+  max_limits:
+    agents: 50  # Prevent accidental infinite loops
+    time_minutes: 60
+    cost_dollars: 10.00
+
+# Invocation Strategies
+invocation_strategies:
+  # For different request types
+  comprehensive_review:
+    strategy: "parallel_by_domain"
+    domains_order:
+      - critical_safety_security  # Always first
+      - business                  # Validate viability
+      - leadership               # Strategic alignment
+      - engineering              # Technical implementation
+      - ml_ai                   # AI/ML specific
+      - product                 # Product features
+      - quality                 # Testing
+      - operations             # Deployment
+      - design                 # UX/UI
+    
+  quick_assessment:
+    strategy: "critical_only"
+    include_domains:
+      - critical_safety_security
+      - business
+      - leadership
+    
+  technical_deep_dive:
+    strategy: "sequential"
+    include_domains:
+      - engineering
+      - ml_ai
+      - operations
+      - quality
+
+# Audit and Logging
+audit:
+  log_all_invocations: true
+  log_path: "/orch/logs/invocations/"
+  include_in_log:
+    - timestamp
+    - request_text
+    - agents_requested
+    - agents_invoked
+    - agents_skipped
+    - reason_for_skip
+    - total_time
+    - total_cost
+    - user_confirmations
+  
+  # Tracking for improvement
+  track_metrics:
+    - most_valuable_agents
+    - unnecessary_invocations
+    - common_combinations
+    - time_per_agent
+    - failure_rates
+
+# Error Recovery
+error_recovery:
+  retry_failed_agents: true
+  max_retries: 2
+  retry_delay_seconds: 5
+  
+  on_agent_failure:
+    - log_error
+    - continue_with_others
+    - retry_at_end
+    - report_in_summary
+  
+  on_critical_agent_failure:
+    - immediate_alert
+    - halt_invocation
+    - request_user_decision
+
+# Reporting
+reporting:
+  show_pre_invocation_summary: true
+  show_progress_updates: true
+  show_post_invocation_report: true
+  
+  summary_includes:
+    - total_agents_invoked
+    - total_time_taken
+    - critical_findings
+    - high_priority_recommendations
+    - consensus_points
+    - dissenting_opinions
+    - next_steps
+  
+  format: markdown
+  save_report: true
+  report_path: "/orch/reports/"
+
+# Learning and Optimization
+optimization:
+  learn_patterns: true
+  suggest_subsets: true
+  
+  # After multiple invocations, suggest optimizations
+  optimization_rules:
+    - if: "security always agrees"
+      suggest: "reduce security team to 3 core members"
+    
+    - if: "ml team not relevant"
+      suggest: "skip ML team for non-AI features"
+    
+    - if: "certain agents always together"
+      suggest: "create custom group"
+
+# User Notifications
+notifications:
+  pre_invocation:
+    template: |
+      🔍 Agent Invocation Plan
+      ━━━━━━━━━━━━━━━━━━━━━
+      Request: {request}
+      Agents to invoke: {count} agents
+      Estimated time: {time} minutes
+      Estimated cost: ${cost}
+      
+      Critical agents included: ✓
+      - AI Safety Engineer
+      - Privacy Engineer  
+      - CISO
+      - Business Analyst
+      - Project Manager
+      
+      Proceed? [Y/n]
+  
+  progress:
+    template: |
+      Progress: [{bar}] {percent}%
+      Currently processing: {current_agent}
+      Completed: {completed}/{total}
+      Time remaining: ~{remaining} minutes
+  
+  completion:
+    template: |
+      ✅ Invocation Complete
+      ━━━━━━━━━━━━━━━━━━━━━
+      Total agents invoked: {count}
+      Total time: {time} minutes
+      Critical issues found: {critical_count}
+      
+      Report saved to: {report_path}
+
+# Validation Rules
+validation:
+  # Ensure these conditions are met
+  rules:
+    - name: "Never invoke less than 30 agents for 'whole team'"
+      condition: "if request contains 'whole team' then count >= 30"
+    
+    - name: "Always include safety for AI features"
+      condition: "if request contains 'AI' then includes ai-safety-engineer"
+    
+    - name: "Always include privacy for data features"
+      condition: "if request contains 'data' then includes privacy-engineer"
+    
+    - name: "Security team must be complete"
+      condition: "if includes any security agent then includes all security agents"
+
+# Custom Presets for Common Requests
+presets:
+  mvp_review:
+    name: "MVP Complete Review"
+    agents: ["business-analyst", "product-manager", "staff-engineer", "ux-ui-designer", "project-manager"]
+    
+  security_audit:
+    name: "Security & Compliance Audit"
+    agents: ["ciso", "security-architect", "application-security-engineer", "devsecops-engineer", "privacy-engineer", "ai-safety-engineer"]
+    
+  technical_architecture:
+    name: "Technical Architecture Review"
+    agents: ["cto", "staff-engineer", "security-architect", "data-engineer", "ai-engineer", "devops-engineer"]
+    
+  product_planning:
+    name: "Product Planning Session"
+    agents: ["vp-product", "product-manager", "technical-product-manager", "ai-product-manager", "ux-researcher", "business-analyst"]
+    
+  go_to_market:
+    name: "Go-to-Market Strategy"
+    agents: ["vp-product", "product-manager", "business-analyst", "ux-researcher", "project-manager"]

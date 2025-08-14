@@ -1,0 +1,45 @@
+{
+  "name": "project-root",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "app",
+    "orch"
+  ],
+  "scripts": {
+    "app:dev": "npm run dev --workspace=app",
+    "app:build": "npm run build --workspace=app",
+    "app:test": "npm run test --workspace=app",
+    "app:lint": "npm run lint --workspace=app",
+    "app:typecheck": "npm run typecheck --workspace=app",
+    "orch:start": "npm run start --workspace=orch",
+    "orch:scaffold": "npm run scaffold --workspace=orch",
+    "orch:decompose": "npm run decompose --workspace=orch",
+    "orch:check": "npm run check --workspace=orch",
+    "install:all": "npm install",
+    "test:all": "npm run test --workspaces",
+    "lint:all": "npm run lint --workspaces",
+    "db:test": "node db/test-connection.js",
+    "db:health": "node db/health-check.js",
+    "railway:deploy": "./scripts/deploy-railway.sh",
+    "railway:logs": "railway logs",
+    "railway:status": "railway status",
+    "start": "node orch/auth/server.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.54.2",
+    "@typescript-eslint/eslint-plugin": "^8.39.1",
+    "@typescript-eslint/parser": "^8.39.1",
+    "eslint": "^9.33.0",
+    "eslint-config-prettier": "^9.1.2",
+    "happy-dom": "^18.0.1",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.2",
+    "vite": "^5.4.19",
+    "vitest": "^2.1.9"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "pg": "^8.16.3"
+  }
+}

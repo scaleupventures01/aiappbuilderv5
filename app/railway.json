@@ -1,0 +1,49 @@
+{
+  "$schema": "https://railway.app/railway.schema.json",
+  "build": {
+    "builder": "NIXPACKS",
+    "buildCommand": "npm run install:all && npm run app:build",
+    "watchPatterns": [
+      "app/**",
+      "db/**",
+      "package.json",
+      "package-lock.json"
+    ]
+  },
+  "deploy": {
+    "numReplicas": 1,
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 10,
+    "startCommand": "node orch/auth/server.mjs",
+    "healthcheckPath": "/health",
+    "healthcheckTimeout": 300
+  },
+  "environments": {
+    "production": {
+      "variables": {
+        "NODE_ENV": "production",
+        "PORT": "$PORT",
+        "DB_HOST": "${{Postgres.PGHOST}}",
+        "DB_PORT": "${{Postgres.PGPORT}}",
+        "DB_NAME": "${{Postgres.PGDATABASE}}",
+        "DB_USER": "${{Postgres.PGUSER}}",
+        "DB_PASSWORD": "${{Postgres.PGPASSWORD}}",
+        "DATABASE_URL": "${{Postgres.DATABASE_URL}}",
+        "DB_SSL": "true"
+      }
+    },
+    "staging": {
+      "variables": {
+        "NODE_ENV": "staging",
+        "PORT": "$PORT",
+        "DB_HOST": "${{Postgres.PGHOST}}",
+        "DB_PORT": "${{Postgres.PGPORT}}",
+        "DB_NAME": "${{Postgres.PGDATABASE}}",
+        "DB_USER": "${{Postgres.PGUSER}}",
+        "DB_PASSWORD": "${{Postgres.PGPASSWORD}}",
+        "DATABASE_URL": "${{Postgres.DATABASE_URL}}",
+        "DB_SSL": "true"
+      }
+    }
+  }
+}

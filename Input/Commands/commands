@@ -1,0 +1,28 @@
+next prd
+
+Continue implementing the Elite Trading Coach AI MVP from where the
+   previous session left off.
+
+  Context:
+  - PRD-1.1.1.1 (PostgreSQL Database Setup) is COMPLETE with all
+  sign-offs
+  - Database connection is configured at /app/db/connection.js
+  - Railway deployment is ready
+  - All project files must be created under /app folder structure
+
+  Task:
+  1. Read /app/PRDs/M0/1.1/ to identify the next PRD to implement
+  (should be PRD-1.1.1.2 Users Table)
+  2. Review the completed PRD-1.1.1.1 to understand the database
+  foundation
+  3. Create a task plan using TodoWrite tool
+  4. Implement the PRD using appropriate orch agents (Backend
+  Engineer, QA Engineer, Security Architect, etc.)
+  5. Ensure all agents create their work under /app (not in root
+  directories)
+  6. Get proper testing, reviews, and sign-offs from relevant agents
+  7. Security audits go in /app/PRDs/SecurityAuditReports/
+  8. Update the PRD status to "Complete" when finished
+
+  Start by reading the next PRD and creating an implementation plan
+  for my approval before proceeding with the full implementation.
