@@ -1,0 +1,50 @@
+# Security Audit Configuration for ORCH System
+# This ensures all security audits are saved to the correct location
+
+security_audit:
+  # Standard output directory for all security audit reports
+  output_directory: "/app/PRDs/SecurityAuditReports/"
+  
+  # Naming convention for security audit files
+  naming_pattern: "PRD-{feature_id}-security-audit.md"
+  
+  # Required sections in each security audit
+  required_sections:
+    - executive_summary
+    - security_assessment
+    - vulnerability_analysis
+    - compliance_verification
+    - risk_assessment
+    - recommendations
+    - sign_off
+  
+  # Agents responsible for security audits
+  security_agents:
+    primary:
+      - security-architect
+      - ciso
+      - ai-safety-engineer
+    secondary:
+      - privacy-engineer
+      - application-security-engineer
+      - compliance-officer
+  
+  # Automatic triggers for security audit
+  audit_triggers:
+    - on_feature_completion
+    - on_database_changes
+    - on_authentication_implementation
+    - on_api_endpoints_creation
+    - on_user_data_handling
+  
+  # Security compliance standards to check
+  compliance_standards:
+    - OWASP_Top_10
+    - GDPR
+    - CCPA
+    - SOC2
+    - ISO27001
+    - NIST_Cybersecurity_Framework
+  
+  # Audit report template location
+  template: "/orch/templates/security-audit-template.md"

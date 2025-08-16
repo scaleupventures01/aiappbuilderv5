@@ -445,6 +445,11 @@ const FilePreview: React.FC<{
 - **Risk**: Complex interface confusing users
   - **Mitigation**: Simple, intuitive design with clear visual feedback
 
+### 7.3 QA Artifacts
+- Test cases file: `QA/1.1.5.3-file-dropzone/test-cases.md`
+- Latest results: `QA/1.1.5.3-file-dropzone/test-results-2025-08-14.md` (Overall Status: Pass required)
+
+
 ## 8. Success Metrics
 
 ### 8.1 Technical Metrics
@@ -471,6 +476,13 @@ const FilePreview: React.FC<{
 - **M2**: File validation and preview implemented (Day 2)
 - **M3**: Upload progress tracking functional (Day 2)
 - **M4**: Mobile and accessibility completed (Day 3)
+
+#### Execution Plan (Decomposed Tasks)
+
+| Task ID | Owner (Role) | Description | Preconditions/Dependencies | Outputs (Files/PRD sections) | Risks/Issues | Status |
+| --- | --- | --- | --- | --- | --- | --- |
+| ORCH-TBD | Implementation Owner | Populate tasks per PRD | — | PRD §9.3 updated | — | Planned |
+
 
 ## 10. Appendices
 
@@ -505,3 +517,5 @@ const maxFileSizes = {
 - Responsive layout for small screens
 - Touch gestures for file removal
 - Mobile-specific file picker integration
+## 8. Changelog
+- - orch: scaffold + QA links updated on 2025-08-14. on 2025-08-14.

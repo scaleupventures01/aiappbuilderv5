@@ -1,4 +1,4 @@
-const { Pool } = require('pg');
+import { Pool } from 'pg';
 
 // Railway PostgreSQL configuration
 // Railway provides DATABASE_URL or individual connection parameters
@@ -151,7 +151,7 @@ const closeRailwayPool = async (pool) => {
   }
 };
 
-module.exports = {
+export {
   getDatabaseConfig,
   createRailwayPool,
   testRailwayConnection,

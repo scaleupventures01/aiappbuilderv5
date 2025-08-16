@@ -1,0 +1,272 @@
+{
+  "timestamp": "2025-08-15T16:30:58.105Z",
+  "serverInfo": {
+    "status": 200,
+    "version": "0.0.0",
+    "environment": "development",
+    "websocketClients": 0,
+    "timestamp": "2025-08-15T16:30:58.117Z"
+  },
+  "summary": {
+    "total": 15,
+    "passed": 9,
+    "failed": 6,
+    "warnings": 0
+  },
+  "tests": {
+    "rateLimiting": {
+      "basic_rate_limiting": {
+        "passed": true,
+        "message": "Rate limiting test completed - 10 successful, 0 rate limited",
+        "timestamp": "2025-08-15T16:30:58.135Z",
+        "details": {
+          "successful": 10,
+          "rateLimited": 0,
+          "hasRateLimitHeaders": false,
+          "totalRequests": 10
+        }
+      },
+      "auth_rate_limiting": {
+        "passed": true,
+        "message": "Auth rate limiting test - 5/5 requests processed",
+        "timestamp": "2025-08-15T16:30:58.141Z",
+        "details": {
+          "validResponses": 5,
+          "totalRequests": 5
+        }
+      }
+    },
+    "authentication": {
+      "unprotected_endpoints": {
+        "passed": true,
+        "message": "Unprotected endpoints accessible",
+        "timestamp": "2025-08-15T16:30:58.144Z",
+        "details": {
+          "endpointCount": 3
+        }
+      },
+      "protected_endpoints_no_auth": {
+        "passed": true,
+        "message": "Protected endpoints properly reject unauthorized requests",
+        "timestamp": "2025-08-15T16:30:58.148Z",
+        "details": {
+          "results": [
+            {
+              "url": "http://localhost:3001/api/users/profile",
+              "status": 404,
+              "rejected": true
+            },
+            {
+              "url": "http://localhost:3001/api/conversations",
+              "status": 401,
+              "rejected": true
+            },
+            {
+              "url": "http://localhost:3001/api/messages",
+              "status": 401,
+              "rejected": true
+            }
+          ]
+        }
+      },
+      "invalid_token_rejection": {
+        "passed": true,
+        "message": "Invalid tokens properly rejected",
+        "timestamp": "2025-08-15T16:30:58.149Z",
+        "details": {
+          "status": 404,
+          "body": {
+            "success": false,
+            "error": "Endpoint not found",
+            "code": "ENDPOINT_NOT_FOUND",
+            "path": "/api/users/profile",
+            "method": "GET",
+            "timestamp": "2025-08-15T16:30:58.149Z"
+          }
+        }
+      },
+      "token_generation": {
+        "passed": true,
+        "message": "Test token generated successfully",
+        "timestamp": "2025-08-15T16:30:58.151Z",
+        "details": {
+          "hasThreeParts": true,
+          "tokenLength": 179
+        }
+      }
+    },
+    "errorHandling": {
+      "invalid_json": {
+        "passed": false,
+        "message": "Invalid JSON: Error handling issues",
+        "timestamp": "2025-08-15T16:30:58.153Z",
+        "details": {
+          "expectedStatusRange": [
+            400,
+            499
+          ],
+          "actualStatus": 400,
+          "statusInRange": true,
+          "hasProperErrorFormat": false,
+          "responseBody": {
+            "success": false,
+            "error": "Unexpected token 'i', \"invalid-json-here\" is not valid JSON",
+            "code": "INTERNAL_SERVER_ERROR",
+            "timestamp": "2025-08-15T16:30:58.152Z"
+          }
+        }
+      },
+      "missing_content-type": {
+        "passed": false,
+        "message": "Missing Content-Type: Error handling issues",
+        "timestamp": "2025-08-15T16:30:58.154Z",
+        "details": {
+          "expectedStatusRange": [
+            400,
+            499
+          ],
+          "actualStatus": 429,
+          "statusInRange": true,
+          "hasProperErrorFormat": false,
+          "responseBody": {
+            "success": false,
+            "error": "Too many failed login attempts. Please try again in 1 hour.",
+            "code": "STRICT_RATE_LIMIT"
+          }
+        }
+      },
+      "method_not_allowed": {
+        "passed": false,
+        "message": "Method Not Allowed: Error handling issues",
+        "timestamp": "2025-08-15T16:30:58.156Z",
+        "details": {
+          "expectedStatusRange": [
+            405,
+            405
+          ],
+          "actualStatus": 404,
+          "statusInRange": false,
+          "hasProperErrorFormat": false,
+          "responseBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<"
+        }
+      },
+      "not_found": {
+        "passed": false,
+        "message": "Not Found: Error handling issues",
+        "timestamp": "2025-08-15T16:30:58.157Z",
+        "details": {
+          "expectedStatusRange": [
+            404,
+            404
+          ],
+          "actualStatus": 404,
+          "statusInRange": true,
+          "hasProperErrorFormat": false,
+          "responseBody": {
+            "success": false,
+            "error": "Endpoint not found",
+            "code": "ENDPOINT_NOT_FOUND",
+            "path": "/api/this-endpoint-does-not-exist",
+            "method": "GET",
+            "timestamp": "2025-08-15T16:30:58.156Z"
+          }
+        }
+      },
+      "large_payload": {
+        "passed": false,
+        "message": "Large Payload: Error handling issues",
+        "timestamp": "2025-08-15T16:30:58.159Z",
+        "details": {
+          "expectedStatusRange": [
+            400,
+            499
+          ],
+          "actualStatus": 429,
+          "statusInRange": true,
+          "hasProperErrorFormat": false,
+          "responseBody": {
+            "success": false,
+            "error": "Too many authentication attempts, please try again later",
+            "code": "AUTH_RATE_LIMIT_EXCEEDED",
+            "retryAfter": 900
+          }
+        }
+      }
+    },
+    "integration": {
+      "concurrent_performance": {
+        "passed": true,
+        "message": "Server handles concurrent requests efficiently",
+        "timestamp": "2025-08-15T16:30:58.161Z",
+        "details": {
+          "totalRequests": 5,
+          "successful": 5,
+          "totalTimeMs": 2,
+          "averageTimeMs": 0.4
+        }
+      },
+      "cors_functionality": {
+        "passed": false,
+        "message": "CORS headers missing",
+        "timestamp": "2025-08-15T16:30:58.162Z",
+        "details": {
+          "corsHeaders": {
+            "access-control-allow-credentials": "true",
+            "access-control-allow-headers": "Content-Type,Authorization,X-Requested-With,X-CSRF-Token,X-Request-ID,Accept,Accept-Language,Content-Language,Origin",
+            "access-control-allow-methods": "GET,POST,PUT,DELETE,PATCH,OPTIONS,HEAD",
+            "access-control-expose-headers": "X-Request-ID,X-RateLimit-Limit,X-RateLimit-Remaining,X-RateLimit-Reset,Content-Range,Content-Length,Content-Type",
+            "access-control-max-age": "86400",
+            "cache-control": "public, max-age=86400",
+            "connection": "keep-alive",
+            "content-length": "0",
+            "content-security-policy": "default-src 'self';script-src 'self' 'unsafe-inline';style-src 'self' 'unsafe-inline';img-src 'self' data: https:;connect-src 'self';font-src 'self';object-src 'none';media-src 'self';frame-src 'none';base-uri 'self';form-action 'self';frame-ancestors 'self';script-src-attr 'none';upgrade-insecure-requests",
+            "cross-origin-opener-policy": "same-origin",
+            "cross-origin-resource-policy": "same-origin",
+            "date": "Fri, 15 Aug 2025 16:30:58 GMT",
+            "keep-alive": "timeout=5",
+            "origin-agent-cluster": "?1",
+            "referrer-policy": "no-referrer",
+            "strict-transport-security": "max-age=31536000; includeSubDomains",
+            "vary": "Origin",
+            "x-content-type-options": "nosniff",
+            "x-dns-prefetch-control": "off",
+            "x-download-options": "noopen",
+            "x-frame-options": "SAMEORIGIN",
+            "x-permitted-cross-domain-policies": "none",
+            "x-xss-protection": "0"
+          }
+        }
+      },
+      "websocket_availability": {
+        "passed": true,
+        "message": "WebSocket server is operational",
+        "timestamp": "2025-08-15T16:30:58.163Z",
+        "details": {
+          "status": 200,
+          "body": {
+            "success": true,
+            "message": "WebSocket server healthy",
+            "data": {
+              "connectedClients": 0,
+              "uptime": 146.563032791,
+              "status": "active"
+            }
+          }
+        }
+      }
+    },
+    "documentation": {
+      "api_documentation_completeness": {
+        "passed": true,
+        "message": "API documentation is comprehensive",
+        "timestamp": "2025-08-15T16:30:58.164Z",
+        "details": {
+          "hasEndpoints": true,
+          "hasFeatures": true,
+          "hasSecurity": true,
+          "endpointCount": 6
+        }
+      }
+    }
+  }
+}

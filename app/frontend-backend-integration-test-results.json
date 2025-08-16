@@ -1,0 +1,50 @@
+{
+  "timestamp": "2025-08-15T01:29:38.478Z",
+  "tests": [
+    {
+      "name": "Server Availability",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Upload Health Endpoint",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Upload Authentication Required",
+      "status": "FAILED",
+      "error": "Expected TOKEN_MISSING code, got TOKEN_INVALID"
+    },
+    {
+      "name": "Upload with Invalid Token",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "File Validation Errors",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Multiple Files Upload Structure",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Error Response Structure",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Form Data Parsing",
+      "status": "PASSED",
+      "error": null
+    }
+  ],
+  "summary": {
+    "total": 8,
+    "passed": 7,
+    "failed": 1
+  }
+}

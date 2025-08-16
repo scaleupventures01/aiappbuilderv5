@@ -120,7 +120,7 @@ class DatabaseConnectionTester {
       );
       
       console.log(`${configValid ? '✅' : '❌'} Pool max connections: ${this.pool.options.max}`);
-      console.log(`   Current pool stats:`, poolConfig);
+      console.log('   Current pool stats:', poolConfig);
       console.log(`   Idle timeout: ${this.pool.options.idleTimeoutMillis}ms`);
       console.log(`   Connection timeout: ${this.pool.options.connectionTimeoutMillis}ms`);
       

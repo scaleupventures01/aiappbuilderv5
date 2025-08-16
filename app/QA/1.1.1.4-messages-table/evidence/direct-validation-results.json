@@ -1,0 +1,52 @@
+{
+  "timestamp": "2025-08-14T16:21:19.372Z",
+  "totalChecks": 6,
+  "passed": 0,
+  "failed": 6,
+  "details": [
+    {
+      "component": "Database Schema",
+      "check": "Migration File Access",
+      "status": "FAIL",
+      "details": "Error: ENOENT: no such file or directory, open '/Users/calvinwilliamsjr/Dev Projects/Elite Trading Coach AI/mvp v.05/db/migrations/004_create_messages_table.sql'",
+      "timestamp": "2025-08-14T16:21:19.374Z"
+    },
+    {
+      "component": "Message Model",
+      "check": "Model File Access",
+      "status": "FAIL",
+      "details": "Error: ENOENT: no such file or directory, open '/Users/calvinwilliamsjr/Dev Projects/Elite Trading Coach AI/mvp v.05/models/Message.js'",
+      "timestamp": "2025-08-14T16:21:19.374Z"
+    },
+    {
+      "component": "Database Queries",
+      "check": "Queries File Access",
+      "status": "FAIL",
+      "details": "Error: ENOENT: no such file or directory, open '/Users/calvinwilliamsjr/Dev Projects/Elite Trading Coach AI/mvp v.05/db/queries/messages.js'",
+      "timestamp": "2025-08-14T16:21:19.374Z"
+    },
+    {
+      "component": "AI Verdict Classifier",
+      "check": "Classifier File Access",
+      "status": "FAIL",
+      "details": "Error: ENOENT: no such file or directory, open '/Users/calvinwilliamsjr/Dev Projects/Elite Trading Coach AI/mvp v.05/ai/verdict/classifier.js'",
+      "timestamp": "2025-08-14T16:21:19.375Z"
+    },
+    {
+      "component": "Psychology Detector",
+      "check": "Detector File Access",
+      "status": "FAIL",
+      "details": "Error: ENOENT: no such file or directory, open '/Users/calvinwilliamsjr/Dev Projects/Elite Trading Coach AI/mvp v.05/ai/psychology/pattern-detector.js'",
+      "timestamp": "2025-08-14T16:21:19.375Z"
+    },
+    {
+      "component": "API Endpoints",
+      "check": "API File Access",
+      "status": "FAIL",
+      "details": "Error: ENOENT: no such file or directory, open '/Users/calvinwilliamsjr/Dev Projects/Elite Trading Coach AI/mvp v.05/api/messages/index.js'",
+      "timestamp": "2025-08-14T16:21:19.375Z"
+    }
+  ],
+  "overallStatus": "FAIL",
+  "passRate": 0
+}

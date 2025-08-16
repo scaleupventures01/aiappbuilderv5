@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chart Upload Fix Verification</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        .test-button:hover { background: #0056b3; }
+        .test-button:disabled { background: #6c757d; cursor: not-allowed; }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+        .upload-area {
+            border: 2px dashed #ccc;
+            padding: 40px;
+            text-align: center;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .upload-area.dragover {
+            border-color: #007bff;
+            background: #f8f9ff;
+        }
+        input[type="file"] {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Chart Upload Fix Verification</h1>
+    <p><strong>Root Cause Analysis & Resolution Test</strong></p>
+
+    <div class="test-container">
+        <h2>📊 System Status Check</h2>
+        <button class="test-button" onclick="checkSystemHealth()">Check Backend Health</button>
+        <button class="test-button" onclick="checkAuthEndpoint()">Test Authentication</button>
+        <button class="test-button" onclick="checkUploadEndpoint()">Test Upload Endpoint</button>
+        <div id="health-status" class="log">Click buttons to run tests...</div>
+    </div>
+
+    <div class="test-container">
+        <h2>🔑 Authentication Test</h2>
+        <p>Test the fixed authentication flow:</p>
+        
+        <div>
+            <label>Email: <input type="email" id="test-email" value="test@example.com" /></label><br/>
+            <label>Username: <input type="text" id="test-username" value="testuser" /></label><br/>
+            <label>Password: <input type="password" id="test-password" value="SecurePass123@" /></label><br/>
+            <button class="test-button" onclick="testRegistration()">Test Registration (Fixed)</button>
+            <button class="test-button" onclick="testLogin()">Test Login</button>
+        </div>
+        
+        <div id="auth-status" class="log">Authentication tests will appear here...</div>
+    </div>
+
+    <div class="test-container">
+        <h2>📤 Chart Upload Test</h2>
+        <p>Test chart upload with fixed authentication:</p>
+        
+        <div class="upload-area" id="upload-area" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+            Drag and drop a chart image here or
+            <input type="file" id="chart-file" accept="image/*" onchange="handleFileSelect(event)" />
+        </div>
+        
+        <button class="test-button" onclick="uploadTestChart()">Upload Test Chart</button>
+        <button class="test-button" onclick="simulateChartAnalysis()">Simulate GPT-5 Analysis</button>
+        
+        <div id="upload-status" class="log">Upload tests will appear here...</div>
+    </div>
+
+    <div class="test-container">
+        <h2>🎯 Root Cause Summary</h2>
+        <div class="status success">
+            <strong>✅ ISSUE IDENTIFIED & RESOLVED</strong><br/>
+            The "Failed to connect to server" error was caused by misconfigured authentication routes in server.js
+        </div>
+        
+        <div class="status info">
+            <strong>📋 What was fixed:</strong><br/>
+            • Fixed route mounting: /api/users/register → /api/users<br/>
+            • Authentication endpoints now accessible<br/>
+            • Upload endpoint reachable with valid tokens<br/>
+            • Frontend-backend connectivity restored
+        </div>
+        
+        <div class="status warning">
+            <strong>⚠️ Remaining Configuration:</strong><br/>
+            • Cloudinary credentials needed for file uploads<br/>
+            • Real API keys required for production<br/>
+            • Chart upload will work once Cloudinary is configured
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3001';
+        let authToken = null;
+        
+        function log(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${message}\n`;
+            element.textContent += logEntry;
+            element.scrollTop = element.scrollHeight;
+        }
+
+        async function checkSystemHealth() {
+            try {
+                log('health-status', '🔍 Checking backend health...', 'info');
+                
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    log('health-status', '✅ Backend Health: ONLINE', 'success');
+                    log('health-status', `   Environment: ${data.environment}`, 'info');
+                    log('health-status', `   WebSocket: ${data.websocket?.connectedClients || 0} clients`, 'info');
+                } else {
+                    log('health-status', '❌ Backend Health: FAILED', 'error');
+                }
+            } catch (error) {
+                log('health-status', `❌ Health Check Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function checkAuthEndpoint() {
+            try {
+                log('health-status', '🔍 Testing authentication endpoint...', 'info');
+                
+                // Test the fixed endpoint
+                const response = await fetch(`${API_BASE}/api/users/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({})
+                });
+                
+                const data = await response.json();
+                
+                if (data.error === 'Validation failed' || data.code === 'VALIDATION_ERROR') {
+                    log('health-status', '✅ Auth Endpoint: ACCESSIBLE (validation working)', 'success');
+                } else if (data.error === 'Endpoint not found') {
+                    log('health-status', '❌ Auth Endpoint: NOT FOUND (needs fix)', 'error');
+                } else {
+                    log('health-status', `⚠️ Auth Endpoint: ${data.error}`, 'warning');
+                }
+            } catch (error) {
+                log('health-status', `❌ Auth Test Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function checkUploadEndpoint() {
+            try {
+                log('health-status', '🔍 Testing upload endpoint...', 'info');
+                
+                const response = await fetch(`${API_BASE}/api/upload/images`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({})
+                });
+                
+                const data = await response.json();
+                
+                if (data.error === 'Access token required') {
+                    log('health-status', '✅ Upload Endpoint: ACCESSIBLE (auth required)', 'success');
+                } else {
+                    log('health-status', `⚠️ Upload Endpoint: ${data.error}`, 'warning');
+                }
+            } catch (error) {
+                log('health-status', `❌ Upload Test Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testRegistration() {
+            const email = document.getElementById('test-email').value;
+            const username = document.getElementById('test-username').value;
+            const password = document.getElementById('test-password').value;
+            
+            // Add timestamp to make email unique
+            const uniqueEmail = email.replace('@', `+${Date.now()}@`);
+            const uniqueUsername = username + Date.now();
+            
+            try {
+                log('auth-status', '🔄 Testing user registration...', 'info');
+                
+                const response = await fetch(`${API_BASE}/api/users/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: uniqueEmail,
+                        username: uniqueUsername,
+                        password: password,
+                        first_name: 'Test',
+                        last_name: 'User'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    authToken = data.data.tokens.access_token;
+                    log('auth-status', '✅ Registration: SUCCESS', 'success');
+                    log('auth-status', `   User ID: ${data.data.user.id}`, 'info');
+                    log('auth-status', `   Token: ${authToken.substring(0, 20)}...`, 'info');
+                } else if (data.error.includes('Too many')) {
+                    log('auth-status', '⚠️ Registration: RATE LIMITED (endpoint working)', 'warning');
+                } else {
+                    log('auth-status', `❌ Registration: ${data.error}`, 'error');
+                    if (data.details) {
+                        data.details.forEach(detail => log('auth-status', `   ${detail}`, 'error'));
+                    }
+                }
+            } catch (error) {
+                log('auth-status', `❌ Registration Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function uploadTestChart() {
+            if (!authToken) {
+                log('upload-status', '⚠️ No auth token - run registration first', 'warning');
+                return;
+            }
+            
+            try {
+                log('upload-status', '🔄 Testing chart upload...', 'info');
+                
+                // Create a minimal test image
+                const canvas = document.createElement('canvas');
+                canvas.width = 100;
+                canvas.height = 100;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#4CAF50';
+                ctx.fillRect(0, 0, 100, 100);
+                ctx.fillStyle = 'white';
+                ctx.font = '16px Arial';
+                ctx.fillText('TEST', 30, 55);
+                
+                canvas.toBlob(async (blob) => {
+                    const formData = new FormData();
+                    formData.append('images', blob, 'test-chart.png');
+                    formData.append('context', 'chat');
+                    
+                    const response = await fetch(`${API_BASE}/api/upload/images`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${authToken}`
+                        },
+                        body: formData
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        log('upload-status', '✅ Upload: SUCCESS', 'success');
+                        log('upload-status', `   Files uploaded: ${data.data.totalUploaded}`, 'info');
+                    } else {
+                        if (data.code === 'CLOUDINARY_CONFIG_ERROR') {
+                            log('upload-status', '⚠️ Upload: Cloudinary not configured (expected)', 'warning');
+                            log('upload-status', '✅ BUT: Authentication and endpoint working!', 'success');
+                        } else {
+                            log('upload-status', `❌ Upload: ${data.error}`, 'error');
+                        }
+                    }
+                });
+            } catch (error) {
+                log('upload-status', `❌ Upload Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function simulateChartAnalysis() {
+            try {
+                log('upload-status', '🔄 Testing GPT-5 chart analysis...', 'info');
+                
+                const response = await fetch(`${API_BASE}/api/test-analyze-trade`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: 'Analyze this EUR/USD chart showing bullish breakout pattern above 1.0850 resistance',
+                        speed: 'balanced'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    log('upload-status', '✅ GPT-5 Analysis: SUCCESS', 'success');
+                    log('upload-status', `   Model: ${data.data.model}`, 'info');
+                    log('upload-status', `   Response time: ${data.data.responseTime}ms`, 'info');
+                    log('upload-status', `   Analysis preview: ${data.data.analysis.substring(0, 100)}...`, 'info');
+                } else {
+                    log('upload-status', `❌ Analysis: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                log('upload-status', `❌ Analysis Error: ${error.message}`, 'error');
+            }
+        }
+
+        // File drag and drop handlers
+        function handleDragOver(e) {
+            e.preventDefault();
+            document.getElementById('upload-area').classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            document.getElementById('upload-area').classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            document.getElementById('upload-area').classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                log('upload-status', `📎 File dropped: ${files[0].name}`, 'info');
+            }
+        }
+
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            if (files.length > 0) {
+                log('upload-status', `📎 File selected: ${files[0].name}`, 'info');
+            }
+        }
+
+        // Auto-run basic tests when page loads
+        window.onload = function() {
+            log('health-status', '🚀 Chart Upload Fix Verification Started', 'info');
+            log('health-status', 'Running automatic health checks...', 'info');
+            setTimeout(checkSystemHealth, 500);
+            setTimeout(checkAuthEndpoint, 1000);
+            setTimeout(checkUploadEndpoint, 1500);
+        };
+    </script>
+</body>
+</html>

@@ -277,6 +277,13 @@ const isTimestampBreak = (lastTimestamp: string, currentTimestamp: string): bool
 - [ ] Typing indicator functionality tested
 - [ ] Timestamp display logic validated
 - [ ] Mobile layout and scrolling tested
+- [ ] Virtual scrolling specific testing
+- [ ] Memory leak detection and prevention
+- [ ] Auto-scroll edge cases validated
+- [ ] Message grouping logic tested
+- [ ] Load more functionality verified
+- [ ] Cross-browser compatibility confirmed
+- [ ] Accessibility compliance validated
 
 ## 6. Dependencies
 
@@ -303,6 +310,11 @@ const isTimestampBreak = (lastTimestamp: string, currentTimestamp: string): bool
 - **Risk**: Difficult message navigation affecting user satisfaction
   - **Mitigation**: Intuitive scroll controls and visual feedback
 
+### 7.3 QA Artifacts
+- Test cases file: `QA/1.1.4.2-message-list/test-cases.md`
+- Latest results: `QA/1.1.4.2-message-list/test-results-2025-08-14.md` (Overall Status: Pass required)
+
+
 ## 8. Success Metrics
 
 ### 8.1 Technical Metrics
@@ -319,18 +331,185 @@ const isTimestampBreak = (lastTimestamp: string, currentTimestamp: string): bool
 ## 9. Implementation Timeline
 
 ### 9.1 Development Phases
-- **Phase 1**: Basic message list structure (4 hours)
-- **Phase 2**: Virtual scrolling implementation (6 hours)
-- **Phase 3**: Auto-scroll and typing indicators (4 hours)
-- **Phase 4**: Performance optimization and testing (4 hours)
+- **Phase 1**: Enhance existing VirtualizedMessageList (8 hours)
+- **Phase 2**: Dynamic height calculation implementation (4 hours)
+- **Phase 3**: Improved auto-scroll behavior (4 hours)
+- **Phase 4**: Mobile optimization and touch handling (4 hours)
+- **Phase 5**: Performance monitoring and testing (4 hours)
 
 ### 9.2 Milestones
-- **M1**: Basic message display working (Day 1)
-- **M2**: Virtual scrolling implemented (Day 2)
-- **M3**: Auto-scroll and indicators functional (Day 2)
-- **M4**: Performance optimized and tested (Day 3)
+- **M1**: Enhanced virtualization with dynamic heights (Day 1)
+- **M2**: Improved auto-scroll with UX feedback (Day 2)
+- **M3**: Mobile optimization complete (Day 2)
+- **M4**: Performance validated and tested (Day 3)
 
-## 10. Appendices
+#### Execution Plan (Decomposed Tasks)
+
+| Task ID | Owner (Role) | Description | Preconditions/Dependencies | Outputs (Files/PRD sections) | Risks/Issues | Status |
+| --- | --- | --- | --- | --- | --- | --- |
+| ORCH-TBD | Implementation Owner | Populate tasks per PRD | — | PRD §9.3 updated | — | Planned |
+
+
+## 10. Agent-Generated Implementation Tasks
+
+### Frontend Engineering Tasks
+
+#### **FE-001: Enhance Existing VirtualizedMessageList**
+- **Priority**: Critical
+- **Owner**: Frontend Engineer
+- **Issue**: Two MessageList implementations exist, need consolidation
+- **Changes**: Enhance VirtualizedMessageList instead of creating new component
+- **Expected**: Single, optimized message list with virtual scrolling
+- **Agent Analysis**: Avoid @tanstack/react-virtual dependency, use existing implementation
+
+#### **FE-002: Implement Dynamic Height Calculation**
+- **Priority**: High
+- **Owner**: Frontend Engineer
+- **Issue**: Fixed 80px height estimation causes visual jumping
+- **Changes**: Content-aware height calculation based on message length and attachments
+- **Expected**: Smooth scrolling without layout shifts
+- **Agent Analysis**: Critical for variable message content
+
+#### **FE-003: Improve Auto-scroll Precision**
+- **Priority**: High
+- **Owner**: Frontend Engineer
+- **Issue**: Current 100px threshold may be too aggressive
+- **Changes**: Implement progressive threshold system (0-50px immediate, 50-100px warning)
+- **Expected**: Better user control over auto-scroll behavior
+- **Agent Analysis**: Prevents premature auto-scroll engagement
+
+#### **FE-004: Add Performance Monitoring**
+- **Priority**: Medium
+- **Owner**: Frontend Engineer
+- **Issue**: No real-time performance metrics
+- **Changes**: Add FPS monitoring, memory tracking, scroll jank detection
+- **Expected**: Performance insights during development
+- **Agent Analysis**: Essential for validating 60fps target
+
+#### **FE-005: Mobile Touch Optimization**
+- **Priority**: High
+- **Owner**: Frontend Engineer
+- **Issue**: Touch scroll momentum can bypass throttling
+- **Changes**: Optimize touch handling, preserve momentum during virtual updates
+- **Expected**: Smooth mobile scrolling experience
+- **Agent Analysis**: Critical for mobile users
+
+### UX Design Tasks
+
+#### **UX-001: Implement Progressive Auto-scroll Threshold**
+- **Priority**: High
+- **Owner**: UX Designer + Frontend Engineer
+- **Focus**: Visual indicator when approaching auto-scroll zone
+- **Changes**: 3-tier system with visual feedback
+- **Expected**: Users understand when auto-scroll will engage
+- **Agent Analysis**: Critical for user control perception
+
+#### **UX-002: Add Scroll Position Memory**
+- **Priority**: Medium
+- **Owner**: UX Designer + Frontend Engineer
+- **Focus**: Remember scroll position when navigating away
+- **Changes**: Implement position restoration with smooth animation
+- **Expected**: Preserved context when returning to chat
+- **Agent Analysis**: Important for conversation continuity
+
+#### **UX-003: Enhanced Typing Indicator UX**
+- **Priority**: Medium
+- **Owner**: UX Designer + Frontend Engineer
+- **Focus**: Improve typing indicator visibility and feedback
+- **Changes**: Add estimated response time, show at viewport bottom
+- **Expected**: Better awareness of AI activity
+- **Agent Analysis**: Reduces user uncertainty
+
+#### **UX-004: Improve Message Grouping Visual Design**
+- **Priority**: Medium
+- **Owner**: UX Designer + Frontend Engineer
+- **Focus**: Visual separation between message groups
+- **Changes**: Add subtle separators, progressive timestamps
+- **Expected**: Clearer conversation structure
+- **Agent Analysis**: Enhances readability
+
+#### **UX-005: Implement Infinite Scroll with UX Safeguards**
+- **Priority**: Low
+- **Owner**: UX Designer + Frontend Engineer
+- **Focus**: Replace "load more" with infinite scroll
+- **Changes**: Add loading skeletons, preserve scroll position
+- **Expected**: Seamless message history browsing
+- **Agent Analysis**: Modern UX pattern
+
+#### **UX-006: Accessibility Implementation**
+- **Priority**: High
+- **Owner**: UX Designer + Frontend Engineer
+- **Focus**: ARIA live regions and keyboard navigation
+- **Changes**: Add screen reader support, keyboard shortcuts
+- **Expected**: WCAG 2.1 AA compliance
+- **Agent Analysis**: Critical accessibility gap
+
+### QA Validation Tasks
+
+#### **QA-001: Virtual Scrolling Performance Validation**
+- **Priority**: Critical
+- **Owner**: QA Engineer
+- **Focus**: 60fps target with 1000+ messages
+- **Tests**: Frame rate monitoring, scroll jank detection, memory usage
+- **Environment**: Desktop and mobile browsers
+- **Success**: Consistent 60fps, < 50MB memory usage
+- **Agent Analysis**: Core performance requirement
+
+#### **QA-002: Auto-scroll Logic Testing**
+- **Priority**: High
+- **Owner**: QA Engineer
+- **Focus**: 100px threshold accuracy and edge cases
+- **Tests**: Threshold detection, disable/enable behavior, rapid messages
+- **Environment**: Various viewport sizes
+- **Success**: Predictable auto-scroll behavior
+- **Agent Analysis**: Critical UX feature
+
+#### **QA-003: Memory Leak Detection**
+- **Priority**: High
+- **Owner**: QA Engineer
+- **Focus**: Extended session memory management
+- **Tests**: 30-minute sessions, component cleanup, event listener cleanup
+- **Environment**: Performance profiling tools
+- **Success**: No memory leaks detected
+- **Agent Analysis**: Production stability requirement
+
+#### **QA-004: Mobile Touch Interaction Testing**
+- **Priority**: High
+- **Owner**: QA Engineer
+- **Focus**: Touch scrolling with virtual list
+- **Tests**: Touch momentum, keyboard interaction, pinch-to-zoom
+- **Environment**: iOS Safari, Android Chrome
+- **Success**: Smooth touch interactions
+- **Agent Analysis**: Mobile experience critical
+
+#### **QA-005: Integration Testing**
+- **Priority**: Medium
+- **Owner**: QA Engineer
+- **Focus**: MessageBubble and TypingIndicator integration
+- **Tests**: Component rendering, timestamp logic, message grouping
+- **Environment**: Component testing framework
+- **Success**: All components integrate correctly
+- **Agent Analysis**: System stability
+
+#### **QA-006: Accessibility Compliance Testing**
+- **Priority**: High
+- **Owner**: QA Engineer
+- **Focus**: WCAG 2.1 AA compliance
+- **Tests**: Screen reader navigation, keyboard navigation, ARIA regions
+- **Environment**: NVDA, JAWS, axe-core
+- **Success**: Full accessibility compliance
+- **Agent Analysis**: Legal/compliance requirement
+
+#### **QA-007: Cross-Browser Compatibility**
+- **Priority**: Medium
+- **Owner**: QA Engineer
+- **Focus**: Browser-specific implementations
+- **Tests**: Virtual scrolling across browsers, CSS transforms, API compatibility
+- **Environment**: Chrome, Firefox, Safari, Edge
+- **Success**: Consistent behavior across browsers
+- **Agent Analysis**: Production readiness
+
+## 11. Appendices
 
 ### 10.1 Performance Optimizations
 ```typescript
@@ -387,3 +566,19 @@ const useAutoScrollDetection = (containerRef: RefObject<HTMLElement>) => {
   background: rgba(156, 163, 175, 0.7);
 }
 ```
+## 8. Changelog
+- - orch: scaffold + QA links updated on 2025-08-14. on 2025-08-14.
+
+
+## Agent-Generated Execution Plan
+
+| Task ID | Agent | Description | Dependencies | Deliverables | Status |
+|---------|-------|-------------|--------------|--------------|--------|
+| product-manager-task-001 | product-manager | product-manager implementation for users table | None | product-manager-deliverables | Pending |
+| technical-product-manager-task-001 | technical-product-manager | technical-product-manager implementation for users table | None | technical-product-manager-deliverables | Pending |
+| backend-engineer-task-001 | backend-engineer | backend-engineer implementation for users table | None | backend-engineer-deliverables | Pending |
+| data-engineer-task-001 | data-engineer | data-engineer implementation for users table | None | data-engineer-deliverables | Pending |
+| security-architect-task-001 | security-architect | security-architect implementation for users table | None | security-architect-deliverables | Pending |
+| privacy-engineer-task-001 | privacy-engineer | privacy-engineer implementation for users table | None | privacy-engineer-deliverables | Pending |
+| qa-engineer-task-001 | qa-engineer | qa-engineer implementation for users table | None | qa-engineer-deliverables | Pending |
+| devops-engineer-task-001 | devops-engineer | devops-engineer implementation for users table | None | devops-engineer-deliverables | Pending |

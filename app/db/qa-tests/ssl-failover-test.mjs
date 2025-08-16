@@ -164,7 +164,7 @@ class SSLFailoverTester {
 
       await pool.end();
 
-      console.log(`✅ Connection resilience test passed`);
+      console.log('✅ Connection resilience test passed');
 
       this.testResults.push({
         test: 'Connection Resilience',
@@ -216,7 +216,7 @@ class SSLFailoverTester {
       try {
         await timeoutPool.connect();
         // If we get here, timeout didn't work as expected
-        console.log(`❌ Timeout test failed - connection should have timed out`);
+        console.log('❌ Timeout test failed - connection should have timed out');
         await timeoutPool.end();
         return false;
       } catch (timeoutError) {
@@ -282,7 +282,7 @@ class SSLFailoverTester {
         client.release();
         await invalidPool.end();
         
-        console.log(`❌ Invalid credentials test failed - should have been rejected`);
+        console.log('❌ Invalid credentials test failed - should have been rejected');
         this.testResults.push({
           test: 'Invalid Credentials',
           passed: false,

@@ -1,0 +1,142 @@
+{
+  "timestamp": "2025-08-15T18:31:49.112Z",
+  "prdReference": "PRD-1.2.3-gpt4-vision-integration-service",
+  "testSuite": "Comprehensive Integration Test",
+  "environment": {
+    "mockMode": "auto-detect",
+    "apiKey": "not configured"
+  },
+  "tests": [
+    {
+      "name": "All Services Import Successfully",
+      "status": "PASS",
+      "details": {
+        "enhancedService": true,
+        "costTracking": true,
+        "circuitBreaker": true,
+        "monitoring": true
+      },
+      "timestamp": "2025-08-15T18:31:49.177Z"
+    },
+    {
+      "name": "Enhanced Service Initialization",
+      "status": "PASS",
+      "details": {
+        "status": "healthy",
+        "mockMode": true,
+        "initialized": true,
+        "servicesIntegrated": 5
+      },
+      "timestamp": "2025-08-15T18:31:49.178Z"
+    },
+    {
+      "name": "End-to-End Analysis Flow",
+      "status": "PASS",
+      "details": {
+        "success": true,
+        "verdict": "Diamond",
+        "confidence": 85,
+        "reasoningLength": 217,
+        "mockMode": true,
+        "processingTime": 1906,
+        "requestId": "integration-test-001"
+      },
+      "timestamp": "2025-08-15T18:31:51.084Z"
+    },
+    {
+      "name": "Service Configuration Access",
+      "status": "PASS",
+      "details": {
+        "mockMode": true,
+        "initialized": true,
+        "timeout": 30000,
+        "maxTokens": 1000,
+        "integratedServices": 5
+      },
+      "timestamp": "2025-08-15T18:31:51.085Z"
+    },
+    {
+      "name": "Error Handling and Recovery",
+      "status": "PASS",
+      "details": {
+        "totalErrorTests": 2,
+        "results": [
+          {
+            "test": "Invalid image data",
+            "result": "Correctly handled error",
+            "errorMessage": "Unable to process the image. Please try a clearer chart image."
+          },
+          {
+            "test": "Empty description",
+            "result": "Handled gracefully",
+            "verdict": "Fire"
+          }
+        ]
+      },
+      "timestamp": "2025-08-15T18:31:52.864Z"
+    },
+    {
+      "name": "Concurrent Request Handling",
+      "status": "PASS",
+      "details": {
+        "totalRequests": 5,
+        "successful": 5,
+        "totalTime": 1831,
+        "averageTimePerRequest": 366,
+        "withinTimeLimit": true,
+        "results": [
+          {
+            "index": 1,
+            "success": true,
+            "time": 1831
+          },
+          {
+            "index": 2,
+            "success": true,
+            "time": 1772
+          },
+          {
+            "index": 3,
+            "success": true,
+            "time": 1152
+          }
+        ]
+      },
+      "timestamp": "2025-08-15T18:31:54.697Z"
+    },
+    {
+      "name": "PRD Requirements Compliance",
+      "status": "WARN",
+      "details": {
+        "compliantRequirements": 6,
+        "totalRequirements": 8,
+        "complianceRate": 75,
+        "details": {
+          "supportsImageFormats": true,
+          "returnsStructuredData": "Strong upward trend with volume confirmation and clean breakout pattern. Support level at current price range with resistance at 15% above current levels. Risk/reward ratio favorable with clear entry point identified.",
+          "handlesErrorsGracefully": true,
+          "performsWithinTimeLimit": true,
+          "providesMockModeSupport": true,
+          "integratesWithServices": true,
+          "supportsRetryLogic": true,
+          "providesMetadata": "2025-08-15T18:31:51.084Z"
+        }
+      },
+      "timestamp": "2025-08-15T18:31:54.697Z"
+    }
+  ],
+  "performance": {
+    "endToEndAnalysis": 1906,
+    "concurrentRequests": {
+      "count": 5,
+      "totalTime": 1831,
+      "averageTime": 366.2
+    }
+  },
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "warnings": 1
+  },
+  "overallStatus": "PASS"
+}

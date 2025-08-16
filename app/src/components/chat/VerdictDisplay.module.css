@@ -1,0 +1,324 @@
+/**
+ * VerdictDisplay CSS Module
+ * PRD Reference: PRD-1.2.7-verdict-display-component.md
+ * 
+ * Styles for verdict display components with animations and responsive design
+ */
+
+/* ===== BASE COMPONENT STYLES ===== */
+
+.verdictDisplay {
+  @apply flex items-center rounded-lg border transition-all duration-300;
+  @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+.verdictClickable {
+  @apply cursor-pointer hover:shadow-lg;
+  @apply transform hover:scale-105 active:scale-95;
+}
+
+/* ===== SIZE VARIANTS ===== */
+
+.verdictSmall {
+  @apply p-2 text-xs;
+}
+
+.verdictMedium {
+  @apply p-3 text-sm;
+}
+
+.verdictLarge {
+  @apply p-4 text-base;
+}
+
+/* ===== VERDICT TYPE STYLES ===== */
+
+.verdictDiamond {
+  @apply bg-emerald-50 border-emerald-200 text-emerald-600;
+  @apply dark:bg-emerald-950/30 dark:border-emerald-900/50 dark:text-emerald-400;
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+}
+
+.verdictDiamond:focus {
+  @apply ring-emerald-500;
+}
+
+.verdictDiamond:hover {
+  box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.2);
+}
+
+.verdictFire {
+  @apply bg-amber-50 border-amber-200 text-amber-600;
+  @apply dark:bg-amber-950/30 dark:border-amber-900/50 dark:text-amber-400;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+}
+
+.verdictFire:focus {
+  @apply ring-amber-500;
+}
+
+.verdictFire:hover {
+  box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.2);
+}
+
+.verdictSkull {
+  @apply bg-red-50 border-red-200 text-red-600;
+  @apply dark:bg-red-950/30 dark:border-red-900/50 dark:text-red-400;
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+}
+
+.verdictSkull:focus {
+  @apply ring-red-500;
+}
+
+.verdictSkull:hover {
+  box-shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.2);
+}
+
+/* ===== DARK MODE ADJUSTMENTS ===== */
+
+@media (prefers-color-scheme: dark) {
+  .verdictDiamond {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+  }
+  
+  .verdictFire {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
+  }
+  
+  .verdictSkull {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%);
+  }
+}
+
+/* ===== ICON STYLES ===== */
+
+.iconContainer {
+  @apply flex-shrink-0 flex items-center justify-center;
+}
+
+.iconSmall {
+  @apply w-4 h-4;
+}
+
+.iconMedium {
+  @apply w-6 h-6;
+}
+
+.iconLarge {
+  @apply w-8 h-8;
+}
+
+.iconSvg {
+  @apply w-full h-full drop-shadow-sm;
+}
+
+.iconDiamond {
+  @apply text-emerald-600 dark:text-emerald-400;
+}
+
+.iconFire {
+  @apply text-amber-600 dark:text-amber-400;
+}
+
+.iconSkull {
+  @apply text-red-600 dark:text-red-400;
+}
+
+/* ===== LABEL STYLES ===== */
+
+.labelContainer {
+  @apply flex-1 min-w-0;
+}
+
+.labelText {
+  @apply font-semibold tracking-tight;
+}
+
+.labelSmall {
+  @apply text-xs;
+}
+
+.labelMedium {
+  @apply text-sm;
+}
+
+.labelLarge {
+  @apply text-base;
+}
+
+.labelDiamond {
+  @apply text-emerald-700 dark:text-emerald-300;
+}
+
+.labelFire {
+  @apply text-amber-700 dark:text-amber-300;
+}
+
+.labelSkull {
+  @apply text-red-700 dark:text-red-300;
+}
+
+/* ===== ANIMATIONS ===== */
+
+@keyframes verdictAppear {
+  0% {
+    transform: scale(0.8) rotate(-10deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1) rotate(5deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes iconBounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-6px);
+  }
+  60% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.verdictAnimated {
+  animation: verdictAppear 0.6s ease-out;
+}
+
+.iconAnimated {
+  animation: iconBounce 1s ease-in-out 0.2s 3;
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .verdictAnimated,
+  .iconAnimated {
+    animation: none;
+  }
+  
+  .verdictDisplay {
+    transition: none;
+  }
+  
+  .verdictClickable {
+    transform: none;
+  }
+  
+  .verdictClickable:hover {
+    transform: none;
+  }
+  
+  .verdictClickable:active {
+    transform: none;
+  }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Mobile first approach - base styles above */
+
+/* Tablet and up */
+@media (min-width: 768px) {
+  .verdictSmall {
+    @apply p-2.5;
+  }
+  
+  .verdictMedium {
+    @apply p-4;
+  }
+  
+  .verdictLarge {
+    @apply p-5;
+  }
+  
+  .iconSmall {
+    @apply w-5 h-5;
+  }
+  
+  .iconMedium {
+    @apply w-7 h-7;
+  }
+  
+  .iconLarge {
+    @apply w-9 h-9;
+  }
+}
+
+/* Desktop and up */
+@media (min-width: 1024px) {
+  .verdictMedium {
+    @apply p-4;
+  }
+  
+  .verdictLarge {
+    @apply p-6;
+  }
+  
+  .iconMedium {
+    @apply w-8 h-8;
+  }
+  
+  .iconLarge {
+    @apply w-10 h-10;
+  }
+}
+
+/* ===== ACCESSIBILITY ENHANCEMENTS ===== */
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .verdictDisplay {
+    @apply border-2;
+  }
+  
+  .verdictDiamond {
+    @apply border-emerald-800 bg-emerald-100 text-emerald-900;
+  }
+  
+  .verdictFire {
+    @apply border-amber-800 bg-amber-100 text-amber-900;
+  }
+  
+  .verdictSkull {
+    @apply border-red-800 bg-red-100 text-red-900;
+  }
+}
+
+/* Focus visible for better keyboard navigation */
+.verdictDisplay:focus-visible {
+  @apply ring-2 ring-offset-2;
+}
+
+/* Ensure sufficient color contrast */
+.labelText {
+  font-weight: 600; /* Slightly bolder for better contrast */
+}
+
+/* Print styles */
+@media print {
+  .verdictDisplay {
+    @apply border border-gray-400 bg-white text-black;
+    box-shadow: none !important;
+    background: white !important;
+  }
+  
+  .verdictAnimated,
+  .iconAnimated {
+    animation: none !important;
+  }
+}

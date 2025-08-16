@@ -173,8 +173,8 @@ async function runQuickQATest() {
     const totalTests = testResults.length;
     const successRate = (passedTests / totalTests) * 100;
     
-    console.log(`PRD Reference: PRD-1.1.1.1`);
-    console.log(`Test Suite: PostgreSQL Database Setup QA`);
+    console.log('PRD Reference: PRD-1.1.1.1');
+    console.log('Test Suite: PostgreSQL Database Setup QA');
     console.log(`Environment: ${environment}`);
     console.log(`Tests Passed: ${passedTests}/${totalTests}`);
     console.log(`Success Rate: ${successRate.toFixed(1)}%`);

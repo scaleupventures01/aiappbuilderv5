@@ -137,7 +137,7 @@ class QAReportGenerator {
       
       console.log(`   Max connections: ${config.max} (required: 20) ${config.max === 20 ? '✅' : '❌'}`);
       console.log(`   Idle timeout: ${config.idleTimeoutMillis}ms (required: 30000) ${config.idleTimeoutMillis === 30000 ? '✅' : '❌'}`);
-      console.log(`   Current pool stats:`, stats);
+      console.log('   Current pool stats:', stats);
       
       return {
         test: 'Pool Configuration',

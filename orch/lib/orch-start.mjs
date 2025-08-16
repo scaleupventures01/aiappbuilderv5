@@ -68,7 +68,7 @@ ORCH START - Autonomous Orchestration System
 Usage: npm run orch:start -- [options]
 
 Options:
-  --id <ID>           Feature ID (X.X.X.X.X.X format)
+  --id <ID>           Feature ID (X.X.X.X or X.X.X.X.X.X format)
   --prd-path <path>   Path to PRD file
   --status <status>   Update roadmap status (Ready|In Progress|Done|Blocked)
   --no-autonomous     Disable autonomous mode (run in manual mode)
@@ -123,10 +123,20 @@ function resolvePrdPathById(roadmapId) {
 
 function parseIdAndSlugFromPrd(prdPath) {
   const base = path.basename(prdPath);
-  // Updated regex to match X.X.X.X.X.X pattern
-  const m = base.match(/^((\d+\.){5}\d+)-(.*?)-prd\.md$/);
-  if (!m) return { id: '', slug: '' };
-  return { id: m[1], slug: m[3] };
+  // Try different patterns for PRD filenames
+  // Pattern 1: PRD-X.X.X.X-slug.md
+  let m = base.match(/^PRD-((\d+\.){3,5}\d+)-(.*?)\.md$/);
+  if (m) return { id: m[1], slug: m[3] };
+  
+  // Pattern 2: X.X.X.X-slug-prd.md
+  m = base.match(/^((\d+\.){3,5}\d+)-(.*?)-prd\.md$/);
+  if (m) return { id: m[1], slug: m[3] };
+  
+  // Pattern 3: X.X.X.X-slug.md
+  m = base.match(/^((\d+\.){3,5}\d+)-(.*?)\.md$/);
+  if (m) return { id: m[1], slug: m[3] };
+  
+  return { id: '', slug: '' };
 }
 
 function ensureQaArtifacts(id, slug, dryRun) {
@@ -141,9 +151,9 @@ function ensureQaArtifacts(id, slug, dryRun) {
   }
   if (!fs.existsSync(casesPath)) {
     actions.push({ type: 'write', path: casesPath });
-    // Include ID hierarchy in test case naming
-    const [version, major, minor, feature, task, subtask] = id.split('.');
-    const testPrefix = `TC-${version}.${major}.${minor}`;
+    // Include ID hierarchy in test case naming (handle both 4 and 6 segment IDs)
+    const idParts = id.split('.');
+    const testPrefix = idParts.length >= 3 ? `TC-${idParts[0]}.${idParts[1]}.${idParts[2]}` : `TC-${id}`;
     if (!dryRun) writeUtf8(casesPath, `# Test Cases — ${id}-${slug}\n\n- Derive from PRD section 7.1/7.2.\n- Test ID Format: ${testPrefix}-XXX\n\n## Scenarios\n- [ ] ${testPrefix}-001 — Trigger parsing\n- [ ] ${testPrefix}-002 — PRD edits idempotent\n\n## Acceptance\n- Overall Status: Pass required before Ready flip.\n`);
   }
   if (!fs.existsSync(resultsPath)) {
@@ -204,17 +214,22 @@ async function main() {
 
   const { id, slug } = parseIdAndSlugFromPrd(prdPath);
   
-  // Validate feature ID format
-  if (!id.match(/^\d+\.\d+\.\d+\.\d+\.\d+\.\d+$/)) {
+  // Validate feature ID format (accept both 4-segment and 6-segment IDs)
+  if (!id.match(/^(\d+\.){3,5}\d+$/)) {
     console.error(`Invalid feature ID format: ${id}`);
-    console.error('Expected format: X.X.X.X.X.X');
+    console.error('Expected format: X.X.X.X or X.X.X.X.X.X');
     process.exit(1);
   }
   
-  // Show current roadmap stats
+  // Show current roadmap stats (skip if roadmap doesn't exist)
   if (!args.dryRun) {
-    const stats = getRoadmapStats();
-    console.log(`\n📊Roadmap Status: ${stats.total} features, ${stats.completionRate}% complete\n`);
+    try {
+      const stats = getRoadmapStats();
+      console.log(`\n📊Roadmap Status: ${stats.total} features, ${stats.completionRate}% complete\n`);
+    } catch (e) {
+      // Roadmap file doesn't exist, continue without stats
+      console.log('\n📊 Roadmap file not found, proceeding without stats\n');
+    }
   }
   
   // ORCH START Autonomous Workflow

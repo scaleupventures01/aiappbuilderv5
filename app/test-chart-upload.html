@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPT-5 Chart Analysis Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        .upload-area {
+            border: 3px dashed #ddd;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            background: #f9f9f9;
+            cursor: pointer;
+        }
+        .upload-area:hover, .upload-area.dragover {
+            border-color: #667eea;
+            background: #f0f0ff;
+        }
+        .upload-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .description {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 100px;
+        }
+        .speed-select {
+            width: 100%;
+            padding: 15px;
+            margin-top: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            background: white;
+        }
+        .analyze-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.2s;
+            width: 100%;
+        }
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+        }
+        .analyze-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .preview {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .preview img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 15px;
+            display: none;
+        }
+        .result.show {
+            display: block;
+        }
+        .verdict {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .verdict.Diamond {
+            background: linear-gradient(135deg, #00c851 0%, #00ff00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .verdict.Fire {
+            background: linear-gradient(135deg, #ff6b00 0%, #ffaa00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .verdict.Skull {
+            background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .confidence {
+            text-align: center;
+            font-size: 1.5em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .reasoning {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            line-height: 1.6;
+            color: #333;
+        }
+        .metadata {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            font-size: 0.9em;
+            color: #666;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .loading.show {
+            display: block;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .error {
+            background: #ffe5e5;
+            color: #cc0000;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+        .error.show {
+            display: block;
+        }
+        .system-status {
+            background: #f0f8ff;
+            border: 1px solid #c6d2ff;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+        .status-check-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-ok { background-color: #28a745; }
+        .status-warning { background-color: #ffc107; }
+        .status-error { background-color: #dc3545; }
+        .debug-details {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 GPT-5 Chart Analysis</h1>
+        <p class="subtitle">Upload a trading chart to get AI-powered analysis</p>
+        
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📊</div>
+            <p>Click to upload or drag & drop your chart here</p>
+            <p style="margin-top: 10px; color: #999;">Supports JPG, PNG, GIF (max 10MB)</p>
+            <input type="file" id="fileInput" accept="image/*">
+        </div>
+        
+        <div class="preview" id="preview"></div>
+        
+        <textarea class="description" id="description" placeholder="Optional: Add context about the chart (e.g., 'BTC daily chart', 'Is this a good entry?')"></textarea>
+        
+        <select class="speed-select" id="speedMode">
+            <option value="super_fast">⚡ Super Fast (1-3 seconds)</option>
+            <option value="fast">🏃 Fast (3-8 seconds)</option>
+            <option value="balanced" selected>⚖️ Balanced (8-15 seconds)</option>
+            <option value="high_accuracy">🎯 High Accuracy (15-30 seconds)</option>
+        </select>
+        
+        <button class="analyze-btn" id="analyzeBtn" disabled>Analyze Chart with GPT-5</button>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Analyzing with GPT-5...</p>
+        </div>
+        
+        <div class="error" id="error"></div>
+        
+        <div class="system-status" id="systemStatus">
+            <h3>🔧 System Status</h3>
+            <p>Check backend connectivity and configuration</p>
+            <button class="status-check-btn" id="statusCheckBtn" onclick="checkSystemStatus()">Check System Status</button>
+            <div id="statusResults"></div>
+        </div>
+        
+        <div class="result" id="result">
+            <div class="verdict" id="verdict"></div>
+            <div class="confidence" id="confidence"></div>
+            <div class="reasoning" id="reasoning"></div>
+            <div class="metadata" id="metadata"></div>
+        </div>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const preview = document.getElementById('preview');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const loading = document.getElementById('loading');
+        const result = document.getElementById('result');
+        const error = document.getElementById('error');
+        
+        let selectedFile = null;
+        let imageBase64 = null;
+        
+        // Click to upload
+        uploadArea.addEventListener('click', () => fileInput.click());
+        
+        // Drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+        
+        // File input change
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+        
+        function handleFile(file) {
+            // Validate file
+            if (!file.type.startsWith('image/')) {
+                showError('Please upload an image file');
+                return;
+            }
+            
+            if (file.size > 10 * 1024 * 1024) {
+                showError('File size must be less than 10MB');
+                return;
+            }
+            
+            selectedFile = file;
+            
+            // Show preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                imageBase64 = e.target.result;
+                preview.innerHTML = `<img src="${imageBase64}" alt="Chart preview">`;
+                analyzeBtn.disabled = false;
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // Analyze button
+        analyzeBtn.addEventListener('click', async () => {
+            if (!imageBase64) return;
+            
+            const description = document.getElementById('description').value;
+            const speedMode = document.getElementById('speedMode').value;
+            
+            // Show loading
+            loading.classList.add('show');
+            result.classList.remove('show');
+            error.classList.remove('show');
+            analyzeBtn.disabled = true;
+            
+            try {
+                // Create FormData for file upload
+                const formData = new FormData();
+                formData.append('image', selectedFile);
+                formData.append('description', description);
+                formData.append('speedMode', speedMode);
+
+                const response = await fetch('http://localhost:3001/api/test-analyze-trade', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showResult(data.data, data.metadata);
+                } else {
+                    showError(data.message || 'Analysis failed', data);
+                }
+            } catch (err) {
+                console.error('Analysis error:', err);
+                showErrorWithDiagnostics('Failed to connect to server', err);
+            } finally {
+                loading.classList.remove('show');
+                analyzeBtn.disabled = false;
+            }
+        });
+        
+        function showResult(data, metadata) {
+            const verdictEl = document.getElementById('verdict');
+            const confidenceEl = document.getElementById('confidence');
+            const reasoningEl = document.getElementById('reasoning');
+            const metadataEl = document.getElementById('metadata');
+            
+            // Set verdict with emoji
+            const verdictEmojis = {
+                'Diamond': '💎',
+                'Fire': '🔥',
+                'Skull': '💀'
+            };
+            verdictEl.textContent = `${verdictEmojis[data.verdict]} ${data.verdict}`;
+            verdictEl.className = `verdict ${data.verdict}`;
+            
+            // Set confidence
+            confidenceEl.textContent = `Confidence: ${data.confidence}%`;
+            
+            // Set reasoning
+            reasoningEl.textContent = data.reasoning;
+            
+            // Set metadata
+            metadataEl.innerHTML = `
+                <strong>Model:</strong> ${data.modelUsed}<br>
+                <strong>Processing Time:</strong> ${data.processingTime}ms<br>
+                <strong>Speed Mode:</strong> ${metadata.speedMode} (${metadata.speedModeDisplayName})<br>
+                <strong>Target Time:</strong> ${metadata.targetResponseTime}<br>
+                <strong>Within Target:</strong> ${metadata.speedPerformance.withinTarget ? '✅' : '⚠️'}<br>
+                <strong>Fallback Used:</strong> ${data.fallbackUsed ? 'Yes (GPT-4o)' : 'No'}<br>
+                <strong>Timestamp:</strong> ${new Date(metadata.timestamp).toLocaleString()}
+            `;
+            
+            result.classList.add('show');
+        }
+        
+        function showError(message, data = null) {
+            error.innerHTML = `❌ ${message}`;
+            if (data && data.debug) {
+                error.innerHTML += `<div class="debug-details">Debug: ${JSON.stringify(data.debug, null, 2)}</div>`;
+            }
+            error.classList.add('show');
+        }
+
+        function showErrorWithDiagnostics(message, err) {
+            let errorHtml = `❌ ${message}<br><br>`;
+            errorHtml += '<strong>🔍 Diagnostic Information:</strong><br>';
+            
+            if (err.message && err.message.includes('fetch')) {
+                errorHtml += '• Backend server may not be running<br>';
+                errorHtml += '• Check if server is running on port 3001<br>';
+                errorHtml += '• Try running: <code>npm start</code> in the app directory<br>';
+            }
+            
+            errorHtml += '<br><button class="status-check-btn" onclick="checkSystemStatus()">Check System Status</button>';
+            
+            error.innerHTML = errorHtml;
+            error.classList.add('show');
+        }
+
+        async function checkSystemStatus() {
+            const statusResults = document.getElementById('statusResults');
+            const statusBtn = document.getElementById('statusCheckBtn');
+            
+            statusBtn.disabled = true;
+            statusBtn.textContent = 'Checking...';
+            
+            try {
+                // Check basic connectivity
+                const baseUrl = 'http://localhost:3001';
+                let statusHtml = '<div style="margin-top: 15px;"><strong>🔍 System Diagnostics:</strong><br><br>';
+                
+                // Check current page origin
+                statusHtml += `<span class="status-indicator status-ok"></span>Current Origin: ${window.location.origin}<br>`;
+                
+                // Test basic server connectivity
+                try {
+                    const healthResponse = await fetch(`${baseUrl}/health`);
+                    const healthData = await healthResponse.json();
+                    statusHtml += `<span class="status-indicator status-ok"></span>Server: Running (${healthData.environment})<br>`;
+                } catch (err) {
+                    statusHtml += `<span class="status-indicator status-error"></span>Server: Not responding (${err.message})<br>`;
+                    if (window.location.protocol === 'file:') {
+                        statusHtml += `<br><strong>⚠️ CORS Issue Detected:</strong><br>`;
+                        statusHtml += `You are accessing this page via file:// protocol. Please serve it via HTTP:<br>`;
+                        statusHtml += `1. Run: <code>python3 -m http.server 8080</code><br>`;
+                        statusHtml += `2. Open: <code>http://localhost:8080/test-chart-upload.html</code><br>`;
+                    }
+                    statusResults.innerHTML = statusHtml + '</div>';
+                    return;
+                }
+
+                // Test system status endpoint
+                try {
+                    const sysResponse = await fetch(`${baseUrl}/api/system/status`);
+                    const sysData = await sysResponse.json();
+                    
+                    if (sysData.success) {
+                        const config = sysData.data;
+                        statusHtml += `<span class="status-indicator status-ok"></span>System Status: OK<br>`;
+                        statusHtml += `<span class="status-indicator ${config.openai.mode === 'mock' ? 'status-warning' : 'status-ok'}"></span>OpenAI Mode: ${config.openai.mode}<br>`;
+                        statusHtml += `<span class="status-indicator ${config.openai.service_initialized ? 'status-ok' : 'status-error'}"></span>OpenAI Service: ${config.openai.service_status}<br>`;
+                        statusHtml += `<span class="status-indicator ${config.connectivity.database === 'connected' ? 'status-ok' : 'status-error'}"></span>Database: ${config.connectivity.database}<br>`;
+                        
+                        if (config.configuration.issues.length > 0) {
+                            statusHtml += '<br><strong>⚠️ Configuration Issues:</strong><br>';
+                            config.configuration.issues.forEach(issue => {
+                                statusHtml += `• ${issue}<br>`;
+                            });
+                        }
+                        
+                        statusHtml += '<div class="debug-details" style="margin-top: 10px;"><strong>Full System Status:</strong><br>';
+                        statusHtml += JSON.stringify(sysData.data, null, 2);
+                        statusHtml += '</div>';
+                    } else {
+                        statusHtml += `<span class="status-indicator status-error"></span>System Status: Error (${sysData.message})<br>`;
+                    }
+                } catch (err) {
+                    statusHtml += `<span class="status-indicator status-error"></span>System Status: Endpoint error (${err.message})<br>`;
+                }
+
+                // Test OpenAI endpoint specifically
+                try {
+                    const openAIResponse = await fetch(`${baseUrl}/health/openai`);
+                    const openAIData = await openAIResponse.json();
+                    statusHtml += `<span class="status-indicator ${openAIData.success ? 'status-ok' : 'status-error'}"></span>OpenAI Health: ${openAIData.message}<br>`;
+                } catch (err) {
+                    statusHtml += `<span class="status-indicator status-error"></span>OpenAI Health: Check failed<br>`;
+                }
+
+                statusHtml += '</div>';
+                statusResults.innerHTML = statusHtml;
+                
+            } catch (err) {
+                statusResults.innerHTML = `<div style="margin-top: 15px;"><span class="status-indicator status-error"></span>System check failed: ${err.message}</div>`;
+            } finally {
+                statusBtn.disabled = false;
+                statusBtn.textContent = 'Check System Status';
+            }
+        }
+
+        // Auto-check system status on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Small delay to let the page render
+            setTimeout(checkSystemStatus, 1000);
+        });
+    </script>
+</body>
+</html>

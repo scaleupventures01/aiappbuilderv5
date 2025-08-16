@@ -1,0 +1,46 @@
+{
+  "timestamp": "2025-08-16T02:42:09.882Z",
+  "tests": [
+    {
+      "name": "Server Health",
+      "passed": false,
+      "details": "Response: 200",
+      "timestamp": "2025-08-16T02:42:09.905Z"
+    },
+    {
+      "name": "Static Assets",
+      "passed": true,
+      "details": "3/3 assets accessible",
+      "timestamp": "2025-08-16T02:42:09.912Z"
+    },
+    {
+      "name": "Error Handling Components",
+      "passed": false,
+      "details": "0/5 components detected",
+      "timestamp": "2025-08-16T02:42:09.915Z"
+    },
+    {
+      "name": "API Endpoints",
+      "passed": true,
+      "details": "3/3 endpoints working",
+      "timestamp": "2025-08-16T02:42:09.920Z"
+    },
+    {
+      "name": "WebSocket Health",
+      "passed": false,
+      "details": "WebSocket endpoint not responding as expected",
+      "timestamp": "2025-08-16T02:42:09.925Z"
+    },
+    {
+      "name": "Retry Mechanisms",
+      "passed": true,
+      "details": "Server error handling working",
+      "timestamp": "2025-08-16T02:42:09.933Z"
+    }
+  ],
+  "summary": {
+    "total": 6,
+    "passed": 3,
+    "failed": 3
+  }
+}

@@ -127,7 +127,7 @@ class ComprehensiveQATester {
       console.log(`${configValid ? '✅' : '❌'} Pool configuration`);
       console.log(`   Max connections: ${poolConfig.max} (required: 20)`);
       console.log(`   Idle timeout: ${poolConfig.idleTimeoutMillis}ms (required: 30000)`);
-      console.log(`   Current stats:`, currentStats);
+      console.log('   Current stats:', currentStats);
       
       return configValid;
     } catch (error) {
@@ -186,7 +186,7 @@ class ComprehensiveQATester {
       console.log(`${passed ? '✅' : '❌'} Database credentials`);
       console.log(`   Database: ${current_database} (expected: ${expectedDb})`);
       console.log(`   User: ${current_user} (expected: ${expectedUser})`);
-      console.log(`   Permissions:`, perms);
+      console.log('   Permissions:', perms);
       
       return passed;
     } catch (error) {
@@ -429,7 +429,7 @@ class ComprehensiveQATester {
   async runComprehensiveTests() {
     console.log('🚀 PostgreSQL Database Setup - Comprehensive QA Test Suite');
     console.log('===========================================================');
-    console.log(`PRD: PRD-1.1.1.1 - PostgreSQL Database Installation and Configuration`);
+    console.log('PRD: PRD-1.1.1.1 - PostgreSQL Database Installation and Configuration');
     console.log(`Test Start Time: ${new Date().toISOString()}`);
     console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
     

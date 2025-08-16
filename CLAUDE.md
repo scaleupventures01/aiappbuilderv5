@@ -1,5 +1,30 @@
 # CLAUDE.md - Session Preferences & Instructions
 
+## CRITICAL: Workflow Command Handling
+
+### When User Types Workflow Commands
+
+**IMPORTANT**: When users type commands like `orch workflow run X and then Y`, you must use the Multi-PRD Orchestrator, NOT manually implement PRDs.
+
+#### Recognition Patterns:
+- `orch workflow run 1.1.3.3 and then 1.1.3.4`
+- `workflow execute 1.1.2.5 then 1.1.2.6`
+- `run 1.1.1.2, 1.1.1.3 in parallel then 1.1.1.4`
+
+#### How to Handle:
+```javascript
+import { ClaudeIntegration } from './orch/lib/orch/claude-integration.mjs';
+
+// Execute via orchestrator
+const result = await ClaudeIntegration.handleWorkflowCommand(userMessage, {
+  autoConfirm: true
+});
+```
+
+**DO NOT manually call `orch start` for each PRD - let the orchestrator handle it!**
+
+---
+
 ## Agent Invocation Policy
 
 ### DEFAULT BEHAVIOR: ALWAYS INVOKE REAL AGENTS
@@ -111,6 +136,38 @@ All invocations are logged to `/orch/logs/invocations/` with:
 - Completion rate (should be 100%)
 - Time and cost metrics
 - Any issues or warnings
+
+---
+
+## Security Audit Reports Location
+
+### CRITICAL: All Security Audits Must Be Saved To Correct Directory
+
+**Required Location**: `/app/PRDs/SecurityAuditReports/`
+
+### When Creating Security Audits:
+
+1. **ALWAYS save to**: `/app/PRDs/SecurityAuditReports/`
+2. **NEVER save to**: `/app/QA/` or other directories
+3. **Naming Convention**: `PRD-{feature-id}-security-audit.md`
+
+### For Security Architect and CISO Agents:
+
+When performing security audits:
+- Create reports at `/app/PRDs/SecurityAuditReports/PRD-{id}-security-audit.md`
+- Use the security audit template if available
+- Include all OWASP Top 10 checks
+- Document compliance verification (GDPR, CCPA, SOC2)
+- Provide risk assessment and recommendations
+
+### Automatic Security Audit Triggers:
+
+Security audits should be automatically created when:
+- User authentication/authorization is implemented
+- Database schemas handle sensitive data
+- API endpoints process user information
+- Payment or financial features are added
+- Personal data storage or processing occurs
 
 ---
 

@@ -1,0 +1,11 @@
+{
+  "hooks": {
+    "post-response": "~/.claude_completion_hook.sh",
+    "task-complete": "~/.claude_notify.sh"
+  },
+  "notifications": {
+    "enabled": true,
+    "sound": true,
+    "desktop": true
+  }
+}

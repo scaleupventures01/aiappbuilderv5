@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser Connectivity Test</title>
+</head>
+<body>
+    <h1>Browser Connectivity Test</h1>
+    <button onclick="testConnection()">Test Backend Connection</button>
+    <div id="results"></div>
+
+    <script>
+        async function testConnection() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<p>Testing connection...</p>';
+            
+            try {
+                console.log('Testing fetch to backend...');
+                const response = await fetch('http://localhost:3001/health');
+                const data = await response.json();
+                
+                results.innerHTML = `
+                    <h3>✅ Connection Successful!</h3>
+                    <p>Status: ${response.status}</p>
+                    <p>Response: ${JSON.stringify(data, null, 2)}</p>
+                `;
+                console.log('Success:', data);
+            } catch (error) {
+                results.innerHTML = `
+                    <h3>❌ Connection Failed!</h3>
+                    <p>Error: ${error.message}</p>
+                    <p>Check browser console for more details</p>
+                `;
+                console.error('Connection failed:', error);
+            }
+        }
+        
+        // Auto-test on page load
+        window.addEventListener('DOMContentLoaded', testConnection);
+    </script>
+</body>
+</html>

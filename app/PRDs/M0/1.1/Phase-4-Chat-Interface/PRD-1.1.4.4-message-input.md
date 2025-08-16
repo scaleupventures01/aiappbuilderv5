@@ -397,6 +397,11 @@ export const EmojiPicker: React.FC<EmojiPickerProps> = ({
 - **Risk**: Complex input interface confusing users
   - **Mitigation**: Simple, intuitive design with clear visual cues
 
+### 7.3 QA Artifacts
+- Test cases file: `QA/1.1.4.4-message-input/test-cases.md`
+- Latest results: `QA/1.1.4.4-message-input/test-results-2025-08-14.md` (Overall Status: Pass required)
+
+
 ## 8. Success Metrics
 
 ### 8.1 Technical Metrics
@@ -424,7 +429,173 @@ export const EmojiPicker: React.FC<EmojiPickerProps> = ({
 - **M3**: File attachments functional (Day 2)
 - **M4**: Mobile optimization completed (Day 2)
 
-## 10. Appendices
+#### Execution Plan (Decomposed Tasks)
+
+| Task ID | Owner (Role) | Description | Preconditions/Dependencies | Outputs (Files/PRD sections) | Risks/Issues | Status |
+| --- | --- | --- | --- | --- | --- | --- |
+| ORCH-TBD | Implementation Owner | Populate tasks per PRD | — | PRD §9.3 updated | — | Planned |
+
+
+## 10. Agent-Generated Implementation Tasks
+
+### Frontend Engineering Tasks
+
+#### **FE-001: Enhance Existing Component**
+- **Priority**: Critical
+- **Owner**: Frontend Engineer
+- **Issue**: Current implementation more advanced than PRD
+- **Changes**: Enhance existing MessageInput.tsx rather than replacing
+- **Expected**: Maintain existing features while adding new ones
+- **Agent Analysis**: Existing component has better state management and features
+
+#### **FE-002: Emoji Picker Implementation**
+- **Priority**: High
+- **Owner**: Frontend Engineer
+- **Issue**: EmojiPicker component doesn't exist
+- **Changes**: Create standalone component with keyboard navigation
+- **Expected**: Trading-specific emojis included (📈, 📉, 💰, 🚀)
+- **Agent Analysis**: Needs proper positioning logic and mobile layout
+
+#### **FE-003: File Upload Service Integration**
+- **Priority**: Critical
+- **Owner**: Frontend Engineer
+- **Issue**: Backend endpoint doesn't exist
+- **Changes**: Implement /api/upload with progress tracking and retry logic
+- **Expected**: Robust file handling with validation
+- **Agent Analysis**: Both client and server validation required
+
+#### **FE-004: Socket.IO Typing Indicators**
+- **Priority**: High
+- **Owner**: Frontend Engineer
+- **Issue**: Real-time infrastructure missing
+- **Changes**: Implement broadcasting with 3-second timeout debouncing
+- **Expected**: Multiple users typing support
+- **Agent Analysis**: Needs connection status management
+
+#### **FE-005: Performance Optimization**
+- **Priority**: High
+- **Owner**: Frontend Engineer
+- **Issue**: Auto-resize could cause layout thrashing
+- **Changes**: Debounced auto-resize (50ms), virtual scrolling for attachments
+- **Expected**: < 100ms input lag maintained
+- **Agent Analysis**: Critical for user experience
+
+#### **FE-006: Enhanced Error Handling**
+- **Priority**: Medium
+- **Owner**: Frontend Engineer
+- **Issue**: Limited error recovery mechanisms
+- **Changes**: Add retry logic, offline detection, error boundaries
+- **Expected**: Graceful degradation in all scenarios
+- **Agent Analysis**: User-friendly error messages required
+
+### UX Design Tasks
+
+#### **UX-001: Mobile Touch Optimization**
+- **Priority**: Critical
+- **Owner**: UX Designer + Frontend Engineer
+- **Focus**: Minimum 44px touch targets for all interactive elements
+- **Changes**: Increase button sizes, add haptic feedback, optimize emoji grid
+- **Expected**: Seamless mobile experience
+- **Agent Analysis**: Current touch targets too small for mobile
+
+#### **UX-002: Enhanced Visual Feedback**
+- **Priority**: High
+- **Owner**: UX Designer
+- **Focus**: Focus states, hover animations, loading indicators
+- **Changes**: 3px primary color outline, scale animations, typing dots
+- **Expected**: Clear user feedback for all interactions
+- **Agent Analysis**: Missing visual focus states
+
+#### **UX-003: Improved File Upload UX**
+- **Priority**: High
+- **Owner**: UX Designer + Frontend Engineer
+- **Focus**: Drag-and-drop visualization and progress
+- **Changes**: Overlay with visual cues, progress bars, file type icons
+- **Expected**: Intuitive file handling
+- **Agent Analysis**: Hidden file input not intuitive
+
+#### **UX-004: Accessibility Enhancement**
+- **Priority**: Critical
+- **Owner**: UX Designer + Frontend Engineer
+- **Focus**: WCAG 2.1 AA compliance
+- **Changes**: ARIA labels, focus trap for modals, high contrast support
+- **Expected**: Full accessibility for all users
+- **Agent Analysis**: Missing role definitions and live regions
+
+#### **UX-005: Smart Input Features**
+- **Priority**: Medium
+- **Owner**: UX Designer + Frontend Engineer
+- **Focus**: Draft auto-save and undo functionality
+- **Changes**: Save every 10 seconds, Ctrl+Z support, message templates
+- **Expected**: Prevent accidental message loss
+- **Agent Analysis**: No recovery mechanism for lost messages
+
+### QA Validation Tasks
+
+#### **QA-001: Input Response Time Validation**
+- **Priority**: Critical
+- **Owner**: QA Engineer
+- **Focus**: < 100ms input lag validation
+- **Tests**: Rapid typing, performance monitoring, 95th percentile metrics
+- **Environment**: Performance testing tools
+- **Success**: All responses < 100ms under normal load
+- **Agent Analysis**: Core performance requirement
+
+#### **QA-002: Security Testing Suite**
+- **Priority**: Critical
+- **Owner**: QA Engineer
+- **Focus**: XSS prevention and file validation
+- **Tests**: Script injection, malicious files, EXIF data, polyglot files
+- **Environment**: Security testing frameworks
+- **Success**: No vulnerabilities found
+- **Agent Analysis**: Production security requirement
+
+#### **QA-003: File Upload Testing**
+- **Priority**: High
+- **Owner**: QA Engineer
+- **Focus**: Size limits, type validation, multiple files
+- **Tests**: 10MB limit, MIME types, drag-and-drop, error handling
+- **Environment**: Various file types and sizes
+- **Success**: All validations working correctly
+- **Agent Analysis**: Critical for user experience
+
+#### **QA-004: Cross-Browser Testing**
+- **Priority**: High
+- **Owner**: QA Engineer
+- **Focus**: Browser compatibility validation
+- **Tests**: Chrome, Firefox, Safari, Edge, mobile browsers
+- **Environment**: BrowserStack or similar
+- **Success**: Consistent behavior across all browsers
+- **Agent Analysis**: Production readiness requirement
+
+#### **QA-005: Mobile Device Testing**
+- **Priority**: High
+- **Owner**: QA Engineer
+- **Focus**: Touch interactions and responsive design
+- **Tests**: Virtual keyboards, orientation changes, gestures
+- **Environment**: Real devices and emulators
+- **Success**: Seamless mobile experience
+- **Agent Analysis**: Critical for mobile users
+
+#### **QA-006: Accessibility Testing**
+- **Priority**: Critical
+- **Owner**: QA Engineer
+- **Focus**: WCAG 2.1 AA compliance
+- **Tests**: Screen readers, keyboard navigation, color contrast
+- **Environment**: NVDA, JAWS, axe-core
+- **Success**: Full accessibility compliance
+- **Agent Analysis**: Legal requirement
+
+#### **QA-007: Load Testing**
+- **Priority**: Medium
+- **Owner**: QA Engineer
+- **Focus**: Concurrent user handling
+- **Tests**: 100 users typing simultaneously, bulk uploads
+- **Environment**: Load testing tools
+- **Success**: Stable performance under load
+- **Agent Analysis**: Scalability validation
+
+## 11. Appendices
 
 ### 10.1 Keyboard Shortcuts
 ```typescript
@@ -462,3 +633,5 @@ const fileValidation = {
 - Screen reader announcements for file attachments
 - Focus management for modals and pickers
 - High contrast mode support
+## 8. Changelog
+- - orch: scaffold + QA links updated on 2025-08-14. on 2025-08-14.

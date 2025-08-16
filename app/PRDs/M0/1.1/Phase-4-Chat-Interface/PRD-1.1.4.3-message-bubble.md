@@ -388,6 +388,13 @@ export const ImageAttachment: React.FC<ImageAttachmentProps> = ({
 - [ ] Image loading and error handling
 - [ ] Link detection and preview
 - [ ] Mobile layout and touch interactions
+- [ ] Performance testing (< 50ms render target)
+- [ ] Security testing (XSS protection)
+- [ ] Accessibility compliance (WCAG 2.1 AA)
+- [ ] Visual regression testing
+- [ ] Cross-browser compatibility validation
+- [ ] Error boundary testing
+- [ ] Internationalization support
 
 ## 6. Dependencies
 
@@ -415,6 +422,11 @@ export const ImageAttachment: React.FC<ImageAttachmentProps> = ({
 - **Risk**: Unclear message distinction affecting usability
   - **Mitigation**: Clear visual design and user testing
 
+### 7.3 QA Artifacts
+- Test cases file: `QA/1.1.4.3-message-bubble/test-cases.md`
+- Latest results: `QA/1.1.4.3-message-bubble/test-results-2025-08-14.md` (Overall Status: Pass required)
+
+
 ## 8. Success Metrics
 
 ### 8.1 Technical Metrics
@@ -431,18 +443,179 @@ export const ImageAttachment: React.FC<ImageAttachmentProps> = ({
 ## 9. Implementation Timeline
 
 ### 9.1 Development Phases
-- **Phase 1**: Basic bubble structure and styling (3 hours)
-- **Phase 2**: Content rendering and formatting (4 hours)
-- **Phase 3**: Image and attachment support (4 hours)
-- **Phase 4**: Copy functionality and testing (3 hours)
+- **Phase 1**: Fix type system integration and imports (2 hours)
+- **Phase 2**: Basic bubble structure with accessibility (4 hours)
+- **Phase 3**: Performance optimizations and memoization (3 hours)
+- **Phase 4**: Rich content with security measures (5 hours)
+- **Phase 5**: Mobile optimization and touch interactions (4 hours)
+- **Phase 6**: Testing and visual regression setup (4 hours)
 
 ### 9.2 Milestones
-- **M1**: Basic message bubbles working (Day 1)
-- **M2**: Content formatting implemented (Day 1)
-- **M3**: Media attachments functional (Day 2)
-- **M4**: All features tested and polished (Day 2)
+- **M1**: Type system aligned with codebase (Day 1)
+- **M2**: Accessible message bubbles working (Day 1)
+- **M3**: Rich content with security implemented (Day 2)
+- **M4**: Mobile optimizations complete (Day 3)
+- **M5**: All tests passing with QA validation (Day 3)
 
-## 10. Appendices
+#### Execution Plan (Decomposed Tasks)
+
+| Task ID | Owner (Role) | Description | Preconditions/Dependencies | Outputs (Files/PRD sections) | Risks/Issues | Status |
+| --- | --- | --- | --- | --- | --- | --- |
+| ORCH-TBD | Implementation Owner | Populate tasks per PRD | — | PRD §9.3 updated | — | Planned |
+
+
+## 10. Agent-Generated Implementation Tasks
+
+### Frontend Engineering Tasks
+
+#### **FE-001: Fix Type System Integration**
+- **Priority**: Critical
+- **Owner**: Frontend Engineer
+- **Issue**: Import paths and metadata structure don't match codebase
+- **Changes**: Update to use `@/types/chat` imports and `attachments` array
+- **Expected**: Consistent type system across components
+- **Agent Analysis**: Must align with existing MessageBubbleProps interface
+
+#### **FE-002: Implement Performance Optimizations**
+- **Priority**: High
+- **Owner**: Frontend Engineer
+- **Issue**: String processing in render and missing memoization
+- **Changes**: Add useMemo for URL regex, implement intersection observer for images
+- **Expected**: < 50ms render time per message
+- **Agent Analysis**: Critical for 10,000+ character message support
+
+#### **FE-003: Add Content Security**
+- **Priority**: Critical
+- **Owner**: Frontend Engineer
+- **Issue**: User-generated content not sanitized
+- **Changes**: Implement DOMPurify for content sanitization
+- **Expected**: XSS protection for all message content
+- **Agent Analysis**: Security requirement for production
+
+#### **FE-004: Create Missing Components**
+- **Priority**: High
+- **Owner**: Frontend Engineer
+- **Issue**: LinkPreview and FileAttachment components not implemented
+- **Changes**: Build LinkPreview with security, create FileAttachment component
+- **Expected**: Complete rich content support
+- **Agent Analysis**: Required for feature completeness
+
+#### **FE-005: Add Error Boundaries**
+- **Priority**: Medium
+- **Owner**: Frontend Engineer
+- **Issue**: No error handling for content rendering failures
+- **Changes**: Wrap MessageContent in error boundary
+- **Expected**: Graceful degradation for rendering errors
+- **Agent Analysis**: Improves stability
+
+### UX Design Tasks
+
+#### **UX-001: Fix Accessibility Issues**
+- **Priority**: Critical
+- **Owner**: UX Designer + Frontend Engineer
+- **Focus**: ARIA labels, keyboard navigation, screen reader support
+- **Changes**: Add semantic markup, proper roles, keyboard handlers
+- **Expected**: WCAG 2.1 AA compliance
+- **Agent Analysis**: Legal/compliance requirement
+
+#### **UX-002: Mobile Touch Interactions**
+- **Priority**: High
+- **Owner**: UX Designer + Frontend Engineer
+- **Focus**: Touch-friendly copy button and interactions
+- **Changes**: Long-press for copy, 44px touch targets, swipe gestures
+- **Expected**: Seamless mobile experience
+- **Agent Analysis**: Copy button unusable on mobile without this
+
+#### **UX-003: Visual Hierarchy Enhancement**
+- **Priority**: Medium
+- **Owner**: UX Designer
+- **Focus**: Non-color indicators for message types
+- **Changes**: Add icons, borders, typography variations
+- **Expected**: Message types distinguishable without color
+- **Agent Analysis**: Accessibility requirement
+
+#### **UX-004: Content Layout Optimization**
+- **Priority**: Medium
+- **Owner**: UX Designer + Frontend Engineer
+- **Focus**: Smart image grids and content truncation
+- **Changes**: Adaptive grid (1-4 images), read more for long messages
+- **Expected**: Better content presentation
+- **Agent Analysis**: Improves readability
+
+#### **UX-005: Loading and Error States**
+- **Priority**: High
+- **Owner**: UX Designer
+- **Focus**: Visual feedback for all async operations
+- **Changes**: Loading skeletons, error messages, retry options
+- **Expected**: Clear user feedback
+- **Agent Analysis**: Essential for UX
+
+### QA Validation Tasks
+
+#### **QA-001: Performance Testing Suite**
+- **Priority**: Critical
+- **Owner**: QA Engineer
+- **Focus**: < 50ms render target validation
+- **Tests**: Render time, memory usage, large message handling
+- **Environment**: Performance monitoring tools
+- **Success**: Meets all performance benchmarks
+- **Agent Analysis**: Core requirement validation
+
+#### **QA-002: Security Testing**
+- **Priority**: Critical
+- **Owner**: QA Engineer
+- **Focus**: XSS protection and content sanitization
+- **Tests**: Injection attempts, malicious content, URL validation
+- **Environment**: Security testing tools
+- **Success**: No security vulnerabilities
+- **Agent Analysis**: Production security requirement
+
+#### **QA-003: Accessibility Compliance Testing**
+- **Priority**: High
+- **Owner**: QA Engineer
+- **Focus**: WCAG 2.1 AA compliance
+- **Tests**: Screen reader, keyboard navigation, color contrast
+- **Environment**: NVDA, JAWS, axe-core
+- **Success**: Full accessibility compliance
+- **Agent Analysis**: Legal requirement
+
+#### **QA-004: Visual Regression Testing**
+- **Priority**: Medium
+- **Owner**: QA Engineer
+- **Focus**: Component appearance consistency
+- **Tests**: All message types, states, and themes
+- **Environment**: Playwright, Percy
+- **Success**: No unexpected visual changes
+- **Agent Analysis**: Maintains UI consistency
+
+#### **QA-005: Cross-Browser Testing**
+- **Priority**: High
+- **Owner**: QA Engineer
+- **Focus**: Browser compatibility validation
+- **Tests**: Chrome, Firefox, Safari, Edge functionality
+- **Environment**: BrowserStack or similar
+- **Success**: Consistent behavior across browsers
+- **Agent Analysis**: Production readiness
+
+#### **QA-006: Mobile Device Testing**
+- **Priority**: High
+- **Owner**: QA Engineer
+- **Focus**: Touch interactions and responsive design
+- **Tests**: iOS Safari, Android Chrome, touch gestures
+- **Environment**: Real devices and emulators
+- **Success**: Seamless mobile experience
+- **Agent Analysis**: Mobile user support
+
+#### **QA-007: Edge Case Testing**
+- **Priority**: Medium
+- **Owner**: QA Engineer
+- **Focus**: Extreme content scenarios
+- **Tests**: 10,000+ char messages, multiple images, special characters
+- **Environment**: Test data generators
+- **Success**: Graceful handling of all edge cases
+- **Agent Analysis**: Robustness validation
+
+## 11. Appendices
 
 ### 10.1 Message Status Types
 ```typescript
@@ -479,3 +652,5 @@ export const MessageBubble = React.memo<MessageBubbleProps>(
 - Keyboard navigation for interactive elements
 - High contrast mode support
 - Alternative text for images
+## 8. Changelog
+- - orch: scaffold + QA links updated on 2025-08-14. on 2025-08-14.

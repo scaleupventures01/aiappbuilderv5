@@ -1,29 +1,46 @@
+/// <reference types="vitest" />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  root: '.',
-  build: {
-    outDir: 'dist',
-    emptyOutDir: true,
-    target: 'es2020',
-    minify: 'esbuild',
-    sourcemap: true
-  },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src')
+      '@': path.resolve(__dirname, './src'),
+      '@components': path.resolve(__dirname, './src/components'),
+      '@utils': path.resolve(__dirname, './src/utils'),
+      '@stores': path.resolve(__dirname, './src/stores'),
+      '@types': path.resolve(__dirname, './src/types')
     }
   },
   server: {
-    port: 3000,
+    port: 5173,
+    host: true,
     open: true,
-    host: true
+    proxy: {
+      '/api': 'http://localhost:3001',
+      '/health': 'http://localhost:3001'
+    }
+  },
+  build: {
+    outDir: 'dist',
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          utils: ['lodash', 'date-fns']
+        }
+      }
+    }
   },
   define: {
-    __DESKTOP_MODE__: true,
-    __MOBILE_MODE__: false
+    'process.env': process.env
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.ts'
   }
 });

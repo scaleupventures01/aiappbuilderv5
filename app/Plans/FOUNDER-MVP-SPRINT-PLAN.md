@@ -54,14 +54,14 @@ The goal is NOT to build a perfect platform, but to create something the founder
 
 **Minimum Requirements:**
 - [ ] OpenAI API connected and configured
-- [ ] Send chart image to GPT-4 Vision
+- [ ] Send chart image to GPT-5
 - [ ] Get back trade analysis response
 - [ ] Display Diamond/Fire/Skull verdict
 - [ ] Show confidence percentage
 - [ ] Basic error handling for API failures
 
 **Technical Implementation:**
-- OpenAI API integration with GPT-4 Vision
+- OpenAI API integration with GPT-5
 - Prompt engineering for trade analysis
 - Response parsing and formatting
 - Rate limiting and cost tracking
@@ -381,7 +381,7 @@ Evening: Founder can share charts
 ### Day 4: Connect AI
 ```
 Morning: OpenAI API setup
-Afternoon: Send images to GPT-4 Vision
+Afternoon: Send images to GPT-5
 Evening: Get responses back
 ```
 
@@ -433,7 +433,7 @@ Evening: Founder is analyzing real trades!
 - **Frontend**: React/Vue.js + TailwindCSS
 - **Backend**: Node.js + Express
 - **Database**: PostgreSQL
-- **AI**: OpenAI GPT-4 Vision API
+- **AI**: OpenAI GPT-5 API
 - **Deployment**: Vercel/Railway
 - **File Storage**: Cloudinary/S3
 

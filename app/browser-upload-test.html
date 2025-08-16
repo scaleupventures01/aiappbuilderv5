@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Trading Coach AI - Upload Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: #1e40af;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .content {
+            padding: 20px;
+        }
+        
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+        
+        .test-section h3 {
+            color: #1e40af;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 5px;
+        }
+        
+        .upload-zone {
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s;
+            background: white;
+            margin: 15px 0;
+            cursor: pointer;
+        }
+        
+        .upload-zone:hover {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+        
+        .upload-zone.dragover {
+            border-color: #1d4ed8;
+            background: #dbeafe;
+            transform: scale(1.02);
+        }
+        
+        .upload-zone.error {
+            border-color: #dc2626;
+            background: #fee2e2;
+        }
+        
+        .upload-zone.success {
+            border-color: #16a34a;
+            background: #dcfce7;
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        input[type="file"] {
+            display: none;
+        }
+        
+        .btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+        
+        .btn:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+        
+        .btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn.danger {
+            background: #dc2626;
+        }
+        
+        .btn.danger:hover {
+            background: #b91c1c;
+        }
+        
+        .btn.success {
+            background: #16a34a;
+        }
+        
+        .btn.success:hover {
+            background: #15803d;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #3b82f6;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .log {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 15px 0;
+        }
+        
+        .log-entry {
+            margin: 2px 0;
+            padding: 2px 0;
+        }
+        
+        .log-info { color: #3b82f6; }
+        .log-success { color: #16a34a; }
+        .log-error { color: #dc2626; }
+        .log-warning { color: #d97706; }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-online { background: #16a34a; }
+        .status-offline { background: #dc2626; }
+        .status-loading { background: #d97706; animation: pulse 2s infinite; }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .file-preview {
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 10px;
+            margin: 5px 0;
+        }
+        
+        .file-preview img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        
+        .file-info {
+            flex: 1;
+        }
+        
+        .file-name {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .file-size {
+            color: #6b7280;
+            font-size: 12px;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .result-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .result-card h4 {
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+        
+        .auth-status {
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+        
+        .auth-valid {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+        
+        .auth-invalid {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 0;
+            }
+            
+            .content {
+                padding: 15px;
+            }
+            
+            .upload-zone {
+                padding: 20px;
+            }
+            
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Elite Trading Coach AI</h1>
+            <h2>Upload Functionality Browser Test</h2>
+            <p>Comprehensive testing of FileDropzone component and upload API</p>
+        </div>
+        
+        <div class="content">
+            <!-- Authentication Status -->
+            <div class="test-section">
+                <h3>🔐 Authentication Status</h3>
+                <div id="authStatus" class="auth-status">Checking authentication...</div>
+                <div>
+                    <label for="tokenInput">JWT Token:</label><br>
+                    <input type="text" id="tokenInput" 
+                           value="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4OTZhOTM3OC0xNWZmLTQzYWMtODI1YS0wYzFlODRiYTVjNmIiLCJlbWFpbCI6InRlc3RAZXhhbXBsZS5jb20iLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc1NTMxMjIzMSwiZXhwIjoxNzU1MzI2NjMxLCJhdWQiOiJlbGl0ZS10cmFkaW5nLWNvYWNoLXVzZXJzIiwiaXNzIjoiZWxpdGUtdHJhZGluZy1jb2FjaC1haSJ9.lEzWOlzqmHCUrnLh2pEB4yHhV6GZPl4U3k3aTbpKODc"
+                           style="width: 100%; padding: 8px; margin: 10px 0; font-family: monospace; font-size: 11px;">
+                    <button class="btn" onclick="updateToken()">Update Token</button>
+                    <button class="btn" onclick="checkAuth()">Check Auth</button>
+                </div>
+            </div>
+
+            <!-- Server Status -->
+            <div class="test-section">
+                <h3>🌐 Server Status</h3>
+                <div id="serverStatus">
+                    <span class="status-indicator status-loading"></span>
+                    Checking server status...
+                </div>
+                <button class="btn" onclick="checkServerStatus()">Refresh Status</button>
+            </div>
+
+            <!-- File Upload Tests -->
+            <div class="test-section">
+                <h3>📁 File Upload Tests</h3>
+                
+                <!-- Test 1: Basic Image Upload -->
+                <h4>Test 1: Basic Image Upload</h4>
+                <div class="upload-zone" id="uploadZone1" 
+                     ondrop="handleDrop(event, 'test1')" 
+                     ondragover="handleDragOver(event)" 
+                     ondragleave="handleDragLeave(event)"
+                     onclick="document.getElementById('fileInput1').click()">
+                    <div class="upload-icon">📷</div>
+                    <p>Drag & drop image files here or click to browse</p>
+                    <p style="font-size: 12px; color: #6b7280;">Supports: JPEG, PNG, GIF, WebP (max 15MB)</p>
+                </div>
+                <input type="file" id="fileInput1" multiple accept="image/*" 
+                       onchange="handleFileSelect(this.files, 'test1')">
+                <div class="progress-bar" id="progressBar1" style="display: none;">
+                    <div class="progress-fill" id="progressFill1"></div>
+                </div>
+                <div id="results1"></div>
+
+                <!-- Test 2: Multiple File Upload -->
+                <h4>Test 2: Multiple File Upload (Max 5 files)</h4>
+                <div class="upload-zone" id="uploadZone2" 
+                     ondrop="handleDrop(event, 'test2')" 
+                     ondragover="handleDragOver(event)" 
+                     ondragleave="handleDragLeave(event)"
+                     onclick="document.getElementById('fileInput2').click()">
+                    <div class="upload-icon">📁</div>
+                    <p>Test uploading multiple files (up to 5)</p>
+                </div>
+                <input type="file" id="fileInput2" multiple accept="image/*" 
+                       onchange="handleFileSelect(this.files, 'test2')">
+                <div class="progress-bar" id="progressBar2" style="display: none;">
+                    <div class="progress-fill" id="progressFill2"></div>
+                </div>
+                <div id="results2"></div>
+
+                <!-- Test 3: Error Scenarios -->
+                <h4>Test 3: Error Scenarios</h4>
+                <div>
+                    <button class="btn danger" onclick="testLargeFile()">Test Oversized File</button>
+                    <button class="btn danger" onclick="testInvalidFileType()">Test Invalid File Type</button>
+                    <button class="btn danger" onclick="testNetworkError()">Test Network Error</button>
+                    <button class="btn danger" onclick="testAuthError()">Test Auth Error</button>
+                </div>
+                <div id="errorTestResults"></div>
+
+                <!-- Test 4: Accessibility Tests -->
+                <h4>Test 4: Accessibility & Mobile Tests</h4>
+                <div>
+                    <button class="btn" onclick="testKeyboardNavigation()">Test Keyboard Navigation</button>
+                    <button class="btn" onclick="testScreenReader()">Test Screen Reader</button>
+                    <button class="btn" onclick="testMobileTouch()">Test Mobile Touch</button>
+                </div>
+                <div id="accessibilityResults"></div>
+            </div>
+
+            <!-- React Component Integration -->
+            <div class="test-section">
+                <h3>⚛️ React Component Integration</h3>
+                <p>Open the React app in a new tab to test the FileDropzone component:</p>
+                <button class="btn" onclick="openReactApp()">Open React App</button>
+                <div>
+                    <h4>React App Test Checklist:</h4>
+                    <ul style="margin: 10px 0; padding-left: 20px;">
+                        <li>Navigate to the Psychology Coaching page</li>
+                        <li>Test file upload via FileDropzone component</li>
+                        <li>Verify drag & drop functionality</li>
+                        <li>Check upload progress indicators</li>
+                        <li>Test error handling</li>
+                        <li>Verify mobile responsiveness</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Test Results -->
+            <div class="test-section">
+                <h3>📊 Test Results Summary</h3>
+                <div class="results-grid">
+                    <div class="result-card">
+                        <h4>Upload Tests</h4>
+                        <div id="uploadTestSummary">
+                            <div>✓ Single file upload: <span id="singleFileResult">Pending</span></div>
+                            <div>✓ Multiple file upload: <span id="multiFileResult">Pending</span></div>
+                            <div>✓ Large file handling: <span id="largeFileResult">Pending</span></div>
+                            <div>✓ Invalid file type: <span id="invalidFileResult">Pending</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <h4>Performance Metrics</h4>
+                        <div id="performanceMetrics">
+                            <div>Average upload time: <span id="avgUploadTime">N/A</span></div>
+                            <div>Success rate: <span id="successRate">N/A</span></div>
+                            <div>Error rate: <span id="errorRate">N/A</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <h4>Accessibility Tests</h4>
+                        <div id="accessibilityTestSummary">
+                            <div>✓ Keyboard navigation: <span id="keyboardResult">Pending</span></div>
+                            <div>✓ Screen reader support: <span id="screenReaderResult">Pending</span></div>
+                            <div>✓ Mobile touch: <span id="mobileResult">Pending</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Log -->
+            <div class="test-section">
+                <h3>📝 Activity Log</h3>
+                <div class="log" id="activityLog"></div>
+                <button class="btn" onclick="clearLog()">Clear Log</button>
+                <button class="btn" onclick="exportLog()">Export Log</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentToken = document.getElementById('tokenInput').value;
+        let uploadStats = {
+            attempts: 0,
+            successes: 0,
+            failures: 0,
+            totalTime: 0
+        };
+
+        // Utility functions
+        function log(message, type = 'info') {
+            const timestamp = new Date().toISOString();
+            const logElement = document.getElementById('activityLog');
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            entry.textContent = `[${timestamp}] ${message}`;
+            logElement.appendChild(entry);
+            logElement.scrollTop = logElement.scrollHeight;
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+
+        function clearLog() {
+            document.getElementById('activityLog').innerHTML = '';
+        }
+
+        function exportLog() {
+            const logContent = document.getElementById('activityLog').textContent;
+            const blob = new Blob([logContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `upload-test-log-${new Date().toISOString().split('T')[0]}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function updateToken() {
+            currentToken = document.getElementById('tokenInput').value;
+            log('Token updated', 'info');
+            checkAuth();
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Authentication checking
+        async function checkAuth() {
+            log('Checking authentication...', 'info');
+            const authStatusElement = document.getElementById('authStatus');
+            
+            try {
+                const response = await fetch('http://localhost:3001/api/auth/verify-token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ token: currentToken })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    authStatusElement.className = 'auth-status auth-valid';
+                    authStatusElement.textContent = `✅ Authentication valid - User ID: ${data.data.user_id}`;
+                    log('Authentication successful', 'success');
+                } else {
+                    authStatusElement.className = 'auth-status auth-invalid';
+                    authStatusElement.textContent = '❌ Authentication failed - Invalid or expired token';
+                    log('Authentication failed', 'error');
+                }
+            } catch (error) {
+                authStatusElement.className = 'auth-status auth-invalid';
+                authStatusElement.textContent = '❌ Authentication error - Unable to connect to server';
+                log(`Authentication error: ${error.message}`, 'error');
+            }
+        }
+
+        // Server status checking
+        async function checkServerStatus() {
+            log('Checking server status...', 'info');
+            const statusElement = document.getElementById('serverStatus');
+            
+            try {
+                const startTime = Date.now();
+                const response = await fetch('http://localhost:3001/health', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const responseTime = Date.now() - startTime;
+
+                if (response.ok) {
+                    const data = await response.json();
+                    statusElement.innerHTML = `
+                        <span class="status-indicator status-online"></span>
+                        Server online - Response: ${responseTime}ms (${data.status})
+                    `;
+                    log(`Server online - ${responseTime}ms response time`, 'success');
+                } else {
+                    statusElement.innerHTML = `
+                        <span class="status-indicator status-offline"></span>
+                        Server error - HTTP ${response.status}
+                    `;
+                    log(`Server error: HTTP ${response.status}`, 'error');
+                }
+            } catch (error) {
+                statusElement.innerHTML = `
+                    <span class="status-indicator status-offline"></span>
+                    Server offline - ${error.message}
+                `;
+                log(`Server connection failed: ${error.message}`, 'error');
+            }
+        }
+
+        // Drag and drop handlers
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.currentTarget.classList.add('dragover');
+        }
+
+        function handleDragLeave(event) {
+            event.currentTarget.classList.remove('dragover');
+        }
+
+        function handleDrop(event, testId) {
+            event.preventDefault();
+            event.currentTarget.classList.remove('dragover');
+            const files = event.dataTransfer.files;
+            handleFileSelect(files, testId);
+        }
+
+        // File selection handler
+        function handleFileSelect(files, testId) {
+            if (!files || files.length === 0) return;
+
+            log(`Selected ${files.length} file(s) for ${testId}`, 'info');
+            
+            // Display file previews
+            displayFilePreview(files, testId);
+            
+            // Start upload
+            uploadFiles(files, testId);
+        }
+
+        // Display file preview
+        function displayFilePreview(files, testId) {
+            const resultsElement = document.getElementById(`results${testId.replace('test', '')}`);
+            resultsElement.innerHTML = '<h5>Selected Files:</h5>';
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const preview = document.createElement('div');
+                preview.className = 'file-preview';
+                
+                const fileInfo = document.createElement('div');
+                fileInfo.className = 'file-info';
+                fileInfo.innerHTML = `
+                    <div class="file-name">${file.name}</div>
+                    <div class="file-size">${formatFileSize(file.size)} - ${file.type}</div>
+                `;
+                
+                preview.appendChild(fileInfo);
+                
+                // Add image preview if it's an image
+                if (file.type.startsWith('image/')) {
+                    const img = document.createElement('img');
+                    img.onload = function() { URL.revokeObjectURL(this.src); };
+                    img.src = URL.createObjectURL(file);
+                    preview.insertBefore(img, fileInfo);
+                }
+                
+                resultsElement.appendChild(preview);
+            }
+        }
+
+        // Upload files
+        async function uploadFiles(files, testId) {
+            const progressBar = document.getElementById(`progressBar${testId.replace('test', '')}`);
+            const progressFill = document.getElementById(`progressFill${testId.replace('test', '')}`);
+            progressBar.style.display = 'block';
+            
+            uploadStats.attempts++;
+            const startTime = Date.now();
+            
+            try {
+                log(`Starting upload of ${files.length} file(s)`, 'info');
+                
+                const formData = new FormData();
+                for (let i = 0; i < files.length; i++) {
+                    formData.append('images', files[i]);
+                }
+                formData.append('context', 'browser-test');
+
+                // Simulate progress
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += 10;
+                    progressFill.style.width = `${Math.min(progress, 90)}%`;
+                }, 200);
+
+                const response = await fetch('http://localhost:3001/api/upload/images', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`
+                    },
+                    body: formData
+                });
+
+                clearInterval(progressInterval);
+                progressFill.style.width = '100%';
+
+                const uploadTime = Date.now() - startTime;
+                uploadStats.totalTime += uploadTime;
+
+                if (response.ok) {
+                    const result = await response.json();
+                    uploadStats.successes++;
+                    
+                    log(`Upload successful in ${uploadTime}ms`, 'success');
+                    displayUploadResult(result, testId, true);
+                    updateTestResult(testId, 'success');
+                } else {
+                    const errorData = await response.json();
+                    uploadStats.failures++;
+                    
+                    log(`Upload failed: ${errorData.error}`, 'error');
+                    displayUploadResult(errorData, testId, false);
+                    updateTestResult(testId, 'failed');
+                }
+            } catch (error) {
+                uploadStats.failures++;
+                log(`Upload error: ${error.message}`, 'error');
+                displayUploadResult({ error: error.message }, testId, false);
+                updateTestResult(testId, 'failed');
+            }
+            
+            updatePerformanceMetrics();
+            setTimeout(() => {
+                progressBar.style.display = 'none';
+                progressFill.style.width = '0%';
+            }, 2000);
+        }
+
+        // Display upload result
+        function displayUploadResult(result, testId, success) {
+            const resultsElement = document.getElementById(`results${testId.replace('test', '')}`);
+            const resultDiv = document.createElement('div');
+            resultDiv.style.marginTop = '10px';
+            resultDiv.style.padding = '10px';
+            resultDiv.style.borderRadius = '6px';
+            
+            if (success) {
+                resultDiv.style.background = '#dcfce7';
+                resultDiv.style.border = '1px solid #bbf7d0';
+                resultDiv.innerHTML = `
+                    <h5 style="color: #166534;">✅ Upload Successful</h5>
+                    <p>Uploaded ${result.results.length} file(s)</p>
+                    ${result.results.map(r => `
+                        <div style="margin: 5px 0; font-size: 12px;">
+                            <strong>${r.originalFilename}</strong><br>
+                            URL: <a href="${r.secureUrl}" target="_blank">${r.secureUrl}</a><br>
+                            Size: ${formatFileSize(r.fileSize)}
+                        </div>
+                    `).join('')}
+                `;
+            } else {
+                resultDiv.style.background = '#fee2e2';
+                resultDiv.style.border = '1px solid #fecaca';
+                resultDiv.innerHTML = `
+                    <h5 style="color: #991b1b;">❌ Upload Failed</h5>
+                    <p>${result.error}</p>
+                    ${result.details ? `<p style="font-size: 12px;">${result.details}</p>` : ''}
+                `;
+            }
+            
+            resultsElement.appendChild(resultDiv);
+        }
+
+        // Update test results
+        function updateTestResult(testId, status) {
+            const elementMap = {
+                'test1': 'singleFileResult',
+                'test2': 'multiFileResult'
+            };
+            
+            const elementId = elementMap[testId];
+            if (elementId) {
+                const element = document.getElementById(elementId);
+                element.textContent = status === 'success' ? 'Passed' : 'Failed';
+                element.style.color = status === 'success' ? '#16a34a' : '#dc2626';
+            }
+        }
+
+        // Update performance metrics
+        function updatePerformanceMetrics() {
+            document.getElementById('avgUploadTime').textContent = 
+                uploadStats.attempts > 0 ? `${Math.round(uploadStats.totalTime / uploadStats.attempts)}ms` : 'N/A';
+            
+            document.getElementById('successRate').textContent = 
+                uploadStats.attempts > 0 ? `${Math.round((uploadStats.successes / uploadStats.attempts) * 100)}%` : 'N/A';
+                
+            document.getElementById('errorRate').textContent = 
+                uploadStats.attempts > 0 ? `${Math.round((uploadStats.failures / uploadStats.attempts) * 100)}%` : 'N/A';
+        }
+
+        // Error scenario tests
+        function testLargeFile() {
+            log('Testing oversized file handling...', 'info');
+            // Create a large file blob (20MB)
+            const largeFile = new File([new ArrayBuffer(20 * 1024 * 1024)], 'large-file.jpg', { type: 'image/jpeg' });
+            handleFileSelect([largeFile], 'largeFileTest');
+            document.getElementById('largeFileResult').textContent = 'Tested';
+            document.getElementById('largeFileResult').style.color = '#d97706';
+        }
+
+        function testInvalidFileType() {
+            log('Testing invalid file type handling...', 'info');
+            // Create an invalid file type
+            const invalidFile = new File(['test content'], 'test.exe', { type: 'application/x-executable' });
+            handleFileSelect([invalidFile], 'invalidFileTest');
+            document.getElementById('invalidFileResult').textContent = 'Tested';
+            document.getElementById('invalidFileResult').style.color = '#d97706';
+        }
+
+        function testNetworkError() {
+            log('Simulating network error...', 'info');
+            // This would typically involve disconnecting or using an invalid endpoint
+            alert('Network error test: Please disconnect your internet connection and try uploading a file.');
+        }
+
+        function testAuthError() {
+            log('Testing authentication error...', 'info');
+            const originalToken = currentToken;
+            currentToken = 'invalid-token';
+            
+            // Create a test file
+            const testFile = new File(['test'], 'test.jpg', { type: 'image/jpeg' });
+            handleFileSelect([testFile], 'authErrorTest');
+            
+            // Restore original token after test
+            setTimeout(() => {
+                currentToken = originalToken;
+                log('Restored original authentication token', 'info');
+            }, 3000);
+        }
+
+        // Accessibility tests
+        function testKeyboardNavigation() {
+            log('Testing keyboard navigation...', 'info');
+            alert('Accessibility Test: Try navigating the upload zones using Tab key, then press Enter or Space to open file dialog');
+            document.getElementById('keyboardResult').textContent = 'Manual Test Required';
+            document.getElementById('keyboardResult').style.color = '#d97706';
+        }
+
+        function testScreenReader() {
+            log('Testing screen reader compatibility...', 'info');
+            alert('Screen Reader Test: Check that ARIA labels and roles are properly announced by screen readers');
+            document.getElementById('screenReaderResult').textContent = 'Manual Test Required';
+            document.getElementById('screenReaderResult').style.color = '#d97706';
+        }
+
+        function testMobileTouch() {
+            log('Testing mobile touch functionality...', 'info');
+            if ('ontouchstart' in window) {
+                alert('Mobile Test: Test drag & drop and touch interactions on mobile device');
+                document.getElementById('mobileResult').textContent = 'Touch Detected';
+                document.getElementById('mobileResult').style.color = '#16a34a';
+            } else {
+                alert('Mobile Test: Open this page on a mobile device to test touch functionality');
+                document.getElementById('mobileResult').textContent = 'Desktop Mode';
+                document.getElementById('mobileResult').style.color = '#d97706';
+            }
+        }
+
+        // Open React app
+        function openReactApp() {
+            const reactUrl = window.location.origin;
+            window.open(reactUrl, '_blank');
+            log('Opened React app in new tab', 'info');
+        }
+
+        // Initialize page
+        window.addEventListener('load', function() {
+            log('Browser upload test page loaded', 'info');
+            checkAuth();
+            checkServerStatus();
+            
+            // Set up periodic server status checks
+            setInterval(checkServerStatus, 30000);
+        });
+
+        // Handle file input changes for all inputs
+        document.addEventListener('change', function(event) {
+            if (event.target.type === 'file') {
+                const testId = event.target.id.replace('fileInput', 'test');
+                handleFileSelect(event.target.files, testId);
+            }
+        });
+    </script>
+</body>
+</html>

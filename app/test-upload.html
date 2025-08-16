@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trade Analysis Chart Upload Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .upload-area {
+            border: 2px dashed #4CAF50;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .upload-area:hover {
+            background: #f0f8ff;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .preview {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .preview img {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f0f8ff;
+            border-radius: 10px;
+            display: none;
+        }
+        .result.show {
+            display: block;
+        }
+        .verdict {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .verdict.diamond { color: #4CAF50; }
+        .verdict.fire { color: #ff9800; }
+        .verdict.skull { color: #f44336; }
+        .confidence {
+            font-size: 18px;
+            color: #666;
+        }
+        .reasoning {
+            margin-top: 15px;
+            line-height: 1.6;
+            color: #333;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .loading.show {
+            display: block;
+        }
+        .error {
+            color: #f44336;
+            padding: 15px;
+            background: #ffebee;
+            border-radius: 5px;
+            margin: 20px 0;
+            display: none;
+        }
+        .error.show {
+            display: block;
+        }
+        .mode-indicator {
+            text-align: center;
+            padding: 10px;
+            background: #fff3cd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Elite Trading Coach AI - Chart Analysis</h1>
+        
+        <div class="mode-indicator">
+            ⚠️ Running in MOCK MODE - No API costs (Real API key not configured)
+        </div>
+        
+        <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+            <div id="uploadText">
+                📊 Click to upload a trading chart<br>
+                <small>Supports PNG, JPG, JPEG (Max 10MB)</small>
+            </div>
+        </div>
+        
+        <input type="file" id="fileInput" accept="image/png,image/jpg,image/jpeg">
+        
+        <div class="preview" id="preview"></div>
+        
+        <div>
+            <label for="description" style="display: block; margin: 10px 0;">Optional Description:</label>
+            <input type="text" id="description" placeholder="e.g., AAPL daily chart, Bitcoin 4H timeframe" 
+                   style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+        </div>
+        
+        <button id="analyzeBtn" disabled>Analyze Chart</button>
+        
+        <div class="loading" id="loading">
+            <div>🔍 Analyzing your chart...</div>
+            <div><small>This may take a few seconds</small></div>
+        </div>
+        
+        <div class="error" id="error"></div>
+        
+        <div class="result" id="result">
+            <h2>Analysis Result:</h2>
+            <div class="verdict" id="verdict"></div>
+            <div class="confidence" id="confidence"></div>
+            <div class="reasoning" id="reasoning"></div>
+        </div>
+    </div>
+
+    <script>
+        let selectedFile = null;
+        const API_URL = 'http://localhost:3001/api/analyze-trade';
+        
+        // File input handler
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Validate file type
+                if (!['image/png', 'image/jpeg', 'image/jpg'].includes(file.type)) {
+                    showError('Please select a PNG or JPEG image');
+                    return;
+                }
+                
+                // Validate file size (10MB)
+                if (file.size > 10 * 1024 * 1024) {
+                    showError('File size must be less than 10MB');
+                    return;
+                }
+                
+                selectedFile = file;
+                displayPreview(file);
+                document.getElementById('analyzeBtn').disabled = false;
+                hideError();
+                hideResult();
+            }
+        });
+        
+        // Display image preview
+        function displayPreview(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('preview').innerHTML = 
+                    `<img src="${e.target.result}" alt="Chart preview">`;
+                document.getElementById('uploadText').innerHTML = 
+                    '✅ Chart uploaded: ' + file.name;
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // Analyze button handler
+        document.getElementById('analyzeBtn').addEventListener('click', async function() {
+            if (!selectedFile) return;
+            
+            const formData = new FormData();
+            formData.append('image', selectedFile);
+            
+            const description = document.getElementById('description').value;
+            if (description) {
+                formData.append('description', description);
+            }
+            
+            // Show loading, hide other elements
+            showLoading();
+            hideError();
+            hideResult();
+            document.getElementById('analyzeBtn').disabled = true;
+            
+            try {
+                // Note: In a real app, you'd need to get a JWT token first
+                // For testing, we'll try without auth or you can add a token
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    // headers: {
+                    //     'Authorization': 'Bearer YOUR_JWT_TOKEN'
+                    // },
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    displayResult(data.data);
+                } else {
+                    // Try to display the error message from the API
+                    const errorMsg = data.error || data.message || 'Analysis failed. Please try again.';
+                    showError(errorMsg);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Failed to connect to the server. Make sure the backend is running on port 3001.');
+            } finally {
+                hideLoading();
+                document.getElementById('analyzeBtn').disabled = false;
+            }
+        });
+        
+        // Display analysis result
+        function displayResult(data) {
+            const verdictEl = document.getElementById('verdict');
+            const confidenceEl = document.getElementById('confidence');
+            const reasoningEl = document.getElementById('reasoning');
+            
+            // Set verdict with appropriate icon and color
+            let icon = '';
+            let className = '';
+            switch(data.verdict) {
+                case 'Diamond':
+                    icon = '💎';
+                    className = 'diamond';
+                    break;
+                case 'Fire':
+                    icon = '🔥';
+                    className = 'fire';
+                    break;
+                case 'Skull':
+                    icon = '💀';
+                    className = 'skull';
+                    break;
+                default:
+                    icon = '📊';
+            }
+            
+            verdictEl.innerHTML = `${icon} ${data.verdict}`;
+            verdictEl.className = `verdict ${className}`;
+            confidenceEl.innerHTML = `Confidence: ${data.confidence}%`;
+            reasoningEl.innerHTML = `<strong>Analysis:</strong><br>${data.reasoning}`;
+            
+            document.getElementById('result').classList.add('show');
+        }
+        
+        // Utility functions
+        function showLoading() {
+            document.getElementById('loading').classList.add('show');
+        }
+        
+        function hideLoading() {
+            document.getElementById('loading').classList.remove('show');
+        }
+        
+        function showError(message) {
+            const errorEl = document.getElementById('error');
+            errorEl.innerHTML = '❌ ' + message;
+            errorEl.classList.add('show');
+        }
+        
+        function hideError() {
+            document.getElementById('error').classList.remove('show');
+        }
+        
+        function hideResult() {
+            document.getElementById('result').classList.remove('show');
+        }
+    </script>
+</body>
+</html>

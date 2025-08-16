@@ -8,6 +8,9 @@ import { spawn } from 'child_process';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import fs from 'fs';
+import { glob } from 'glob';
+import { MultiPRDOrchestrator } from './lib/orch/multi-prd-orchestrator.mjs';
+import { SequentialWorkflowRunner } from './lib/orch/sequential-workflow-runner.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -130,6 +133,10 @@ const commandMappings = {
     process.exit(1);
   },
   
+  // Multi-PRD Workflow command (special handling needed)
+  'workflow': 'WORKFLOW_COMMAND',
+  'workflow sequential': 'SEQUENTIAL_WORKFLOW_COMMAND',
+
   // Help command
   'help': () => {
     console.log(`
@@ -144,6 +151,8 @@ const commandMappings = {
 🎯 Action Commands:
   - "start feature 1.1.1.1.0.0" - Start with automatic agent assignment
   - "start manual 1.1.1.1.0.0" - Start without agents
+  - "workflow <description>" - Execute multiple PRDs with natural language (parallel)
+  - "workflow sequential <description>" - Execute multiple PRDs sequentially (recommended)
   - "team review 1.1.1.1.0.0" - Get all 33 agents to review
   - "approve 1.1.1.1.0.0" - Approve feature with agent validation
   - "reject 1.1.1.1.0.0" - Reject feature with agent feedback
@@ -170,6 +179,8 @@ const commandMappings = {
 💡 Examples:
   - "start feature 1.1.1.1.0.0" - Starts with 6-8 agents auto-assigned
   - "team review 1.1.1.1.0.0" - Gets review from all 33 agents
+  - "workflow sequential run 1.1.3.3 and then 1.1.3.4" - Sequential execution (recommended)
+  - "workflow 'run 1.1.2.1, 1.1.2.2, 1.1.2.3 together then 1.1.2.4'" - Parallel execution
   - "create feature" - Launches wizard with agent recommendations
 
 🤖 Available Agents (33 total):
@@ -214,6 +225,69 @@ function findCommand(input) {
 
 // Main execution
 async function main() {
+  // Check if user passed "start" with a PRD filename or path
+  if (process.argv[2] === 'start' && process.argv[3] && !process.argv[3].startsWith('--')) {
+    const prdArg = process.argv[3];
+    
+    // Extract ID from PRD filename or path (handles both absolute and relative paths)
+    // Examples: PRD-1.1.1.2-users-table.md, /app/PRDs/M0/1.1/Phase-1-Independent/PRD-1.1.1.2-users-table.md
+    const idMatch = prdArg.match(/PRD-(\d+(?:\.\d+)+)/i) || 
+                    prdArg.match(/(\d+(?:\.\d+)+)/);
+    if (idMatch) {
+      const extractedId = idMatch[1];
+      
+      // Find the full PRD path if only filename was provided
+      let fullPrdPath = prdArg;
+      if (!prdArg.includes('/')) {
+        // If it's just a filename, find the full path
+        const matches = glob.sync(`**/PRD-${extractedId}*.md`, { 
+          cwd: path.join(__dirname, '..'),
+          absolute: true 
+        });
+        if (matches.length > 0) {
+          fullPrdPath = matches[0];
+        }
+      } else if (!path.isAbsolute(prdArg)) {
+        // Convert relative path to absolute
+        fullPrdPath = path.resolve(prdArg);
+      }
+      
+      console.log(`\n🚀 Starting ORCH Orchestration System`);
+      console.log(`📋 Feature: ${extractedId}`);
+      console.log(`📄 PRD: ${fullPrdPath}`);
+      console.log(`🤖 Invoking 33 AI agents to collaborate on implementation...`);
+      console.log(`⚡ Mode: Autonomous with Do-It-Fully policy`);
+      console.log(`\n${'═'.repeat(60)}\n`);
+      
+      // Use orch-start.mjs which handles the full orchestration with agents
+      const scriptPath = path.join(__dirname, 'lib/orch-start.mjs');
+      const child = spawn('node', [scriptPath, '--prd-path', fullPrdPath, '--autonomous'], { 
+        stdio: 'inherit',
+        cwd: __dirname
+      });
+      
+      child.on('exit', (code) => process.exit(code || 0));
+      return;
+    }
+  }
+  
+  // Special handling for workflow commands
+  if (userInput.startsWith('workflow sequential')) {
+    const runner = new SequentialWorkflowRunner();
+    const description = process.argv.slice(2).join(' ').replace(/^workflow\s+sequential\s*/i, '');
+    console.log(`🔄 Using simplified sequential approach (based on your working command)`);
+    await runner.executeSequentialWorkflow(description);
+    return;
+  }
+  
+  if (userInput.startsWith('workflow')) {
+    const orchestrator = new MultiPRDOrchestrator();
+    const description = process.argv.slice(2).join(' ').replace(/^workflow\s*/i, '');
+    console.log(`⚠️  Using complex parallel approach (may timeout - consider 'workflow sequential' instead)`);
+    await orchestrator.executeWorkflow(description);
+    return;
+  }
+  
   const command = findCommand(userInput);
   
   if (!command) {
@@ -225,6 +299,23 @@ async function main() {
   // If help was called, it already exited
   if (!command || command.length === 0) {
     process.exit(0);
+  }
+  
+  // Handle special workflow command markers
+  if (command === 'SEQUENTIAL_WORKFLOW_COMMAND') {
+    const runner = new SequentialWorkflowRunner();
+    const description = process.argv.slice(2).join(' ').replace(/^workflow\s+sequential\s*/i, '');
+    console.log(`🔄 Using simplified sequential approach (based on your working command)`);
+    await runner.executeSequentialWorkflow(description);
+    return;
+  }
+  
+  if (command === 'WORKFLOW_COMMAND') {
+    const orchestrator = new MultiPRDOrchestrator();
+    const description = process.argv.slice(2).join(' ').replace(/^workflow\s*/i, '');
+    console.log(`⚠️  Using complex parallel approach (may timeout - consider 'workflow sequential' instead)`);
+    await orchestrator.executeWorkflow(description);
+    return;
   }
   
   // Execute the command

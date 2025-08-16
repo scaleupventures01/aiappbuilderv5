@@ -1,7 +1,7 @@
-const { Pool } = require('pg');
+import { Pool } from 'pg';
 
 // Import Railway-specific configuration for production
-const { createRailwayPool, testRailwayConnection, railwayQuery, closeRailwayPool } = require('./railway-config');
+import { createRailwayPool, testRailwayConnection, railwayQuery, closeRailwayPool } from './railway-config.js';
 
 // Determine if we're running on Railway
 const isRailwayDeployment = () => {
@@ -25,9 +25,18 @@ const createDatabasePool = () => {
     user: process.env.DB_USER || 'trading_coach_user',
     password: process.env.DB_PASSWORD,
     ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
-    max: 20, // Maximum connections in pool
+    max: 25, // Increased for upload operations
+    min: 2, // Minimum idle connections
     idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 2000
+    connectionTimeoutMillis: 5000, // Increased timeout for uploads
+    acquireTimeoutMillis: 60000, // Wait up to 60s for connection
+    createTimeoutMillis: 20000,
+    destroyTimeoutMillis: 5000,
+    reapIntervalMillis: 1000,
+    createRetryIntervalMillis: 100,
+    // Upload-specific optimizations
+    keepAlive: true,
+    keepAliveInitialDelayMillis: 0
   });
 };
 
@@ -100,7 +109,7 @@ const closePool = async () => {
   }
 };
 
-module.exports = {
+export {
   pool,
   query,
   getClient,

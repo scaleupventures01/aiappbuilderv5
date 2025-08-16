@@ -1,0 +1,82 @@
+{
+  "timestamp": "2025-08-14T18:49:03.673Z",
+  "prd": "PRD-1.1.3.4",
+  "description": "Base Layout Component Validation",
+  "totalTests": 10,
+  "passed": 10,
+  "failed": 0,
+  "passRate": "100.0%",
+  "compliant": true,
+  "functionalRequirements": {
+    "total": 5,
+    "passed": 5,
+    "compliant": true
+  },
+  "nonFunctionalRequirements": {
+    "total": 4,
+    "passed": 4,
+    "compliant": true
+  },
+  "tests": [
+    {
+      "name": "Base layout component",
+      "requirement": "FR-1",
+      "success": true,
+      "details": "Base layout with responsive design implemented"
+    },
+    {
+      "name": "Navigation menu",
+      "requirement": "FR-2",
+      "success": true,
+      "details": "Navigation menu with routing integration implemented"
+    },
+    {
+      "name": "Auth status display",
+      "requirement": "FR-3",
+      "success": true,
+      "details": "User authentication status display implemented"
+    },
+    {
+      "name": "Mobile sidebar",
+      "requirement": "FR-4",
+      "success": true,
+      "details": "Mobile responsive sidebar with hamburger menu implemented"
+    },
+    {
+      "name": "Breadcrumb navigation",
+      "requirement": "FR-5",
+      "success": true,
+      "details": "Breadcrumb navigation for page hierarchy implemented"
+    },
+    {
+      "name": "Render performance",
+      "requirement": "NFR-1",
+      "success": true,
+      "details": "Layout optimized for performance"
+    },
+    {
+      "name": "Responsive design",
+      "requirement": "NFR-2",
+      "success": true,
+      "details": "Responsive design for 320px to 2560px viewports"
+    },
+    {
+      "name": "Accessibility",
+      "requirement": "NFR-3",
+      "success": true,
+      "details": "Accessible navigation with keyboard and screen reader support"
+    },
+    {
+      "name": "Smooth animations",
+      "requirement": "NFR-4",
+      "success": true,
+      "details": "Smooth animations for mobile menu transitions"
+    },
+    {
+      "name": "Auth store integration",
+      "requirement": "INT-1",
+      "success": true,
+      "details": "Auth store integrated with Zustand"
+    }
+  ]
+}

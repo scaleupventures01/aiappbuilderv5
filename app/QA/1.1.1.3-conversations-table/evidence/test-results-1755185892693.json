@@ -1,0 +1,100 @@
+{
+  "testId": 1755185892693,
+  "startTime": "2025-08-14T15:38:12.693Z",
+  "passed": 4,
+  "failed": 0,
+  "warnings": 0,
+  "details": [
+    {
+      "file": "Database Migration (003_create_conversations_table.sql)",
+      "status": "passed",
+      "path": "db/migrations/003_create_conversations_table.sql",
+      "passed": 14,
+      "failed": 0,
+      "warnings": 0,
+      "details": [
+        "✅ CREATE TABLE statement",
+        "✅ UUID primary key",
+        "✅ User ID foreign key field",
+        "✅ References users table",
+        "✅ Cascade delete configuration",
+        "✅ Mode field definition",
+        "✅ Mode validation constraint",
+        "✅ Status field definition",
+        "✅ Status validation constraint",
+        "✅ JSONB context data field",
+        "✅ User ID index",
+        "✅ JSONB GIN index",
+        "✅ Updated timestamp trigger",
+        "✅ Conversation stats function"
+      ]
+    },
+    {
+      "file": "Conversation Model (models/Conversation.js)",
+      "status": "passed",
+      "path": "models/Conversation.js",
+      "passed": 13,
+      "failed": 0,
+      "warnings": 0,
+      "details": [
+        "✅ Conversation class definition",
+        "✅ Title validation method",
+        "✅ Mode validation method",
+        "✅ Status validation method",
+        "✅ Context data validation method",
+        "✅ User ID validation method",
+        "✅ Database serialization method",
+        "✅ Public API serialization method",
+        "✅ Archive method",
+        "✅ Restore method",
+        "✅ Mode switching method",
+        "✅ Valid mode values",
+        "✅ Valid status values"
+      ]
+    },
+    {
+      "file": "Database Queries (db/queries/conversations.js)",
+      "status": "passed",
+      "path": "db/queries/conversations.js",
+      "passed": 12,
+      "failed": 0,
+      "warnings": 0,
+      "details": [
+        "✅ Create conversation function",
+        "✅ Get conversation by ID function",
+        "✅ Get user conversations function",
+        "✅ Update conversation function",
+        "✅ Archive conversation function",
+        "✅ Restore conversation function",
+        "✅ Delete conversation function",
+        "✅ Search conversations function",
+        "✅ Get user stats function",
+        "✅ User ownership validation in queries",
+        "✅ Soft delete filtering",
+        "✅ Input validation usage"
+      ]
+    },
+    {
+      "file": "API Endpoints (api/conversations/index.js)",
+      "status": "passed",
+      "path": "api/conversations/index.js",
+      "passed": 11,
+      "failed": 0,
+      "warnings": 0,
+      "details": [
+        "✅ POST / (create conversation)",
+        "✅ GET / (list conversations)",
+        "✅ GET /:id (get conversation)",
+        "✅ PUT /:id (update conversation)",
+        "✅ POST /:id/archive (archive)",
+        "✅ POST /:id/restore (restore)",
+        "✅ DELETE /:id (delete conversation)",
+        "✅ Authentication middleware",
+        "✅ Rate limiting middleware",
+        "✅ Input validation function",
+        "✅ UUID validation"
+      ]
+    }
+  ],
+  "endTime": "2025-08-14T15:38:12.695Z"
+}

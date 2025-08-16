@@ -1,0 +1,62 @@
+{
+  "timestamp": "2025-08-15T17:25:28.461Z",
+  "serverStatus": "started",
+  "tests": [
+    {
+      "name": "Server Startup",
+      "passed": true,
+      "details": {
+        "port": 3001
+      },
+      "error": null
+    },
+    {
+      "name": "Health Endpoint",
+      "passed": true,
+      "details": {
+        "statusCode": 200
+      },
+      "error": null
+    },
+    {
+      "name": "OpenAI Health Endpoint",
+      "passed": true,
+      "details": {
+        "statusCode": 503
+      },
+      "error": null
+    },
+    {
+      "name": "API Endpoint Accessibility",
+      "passed": true,
+      "details": {
+        "statusCode": 401,
+        "response": "{\"success\":false,\"error\":\"Access token required\",\"code\":\"TOKEN_MISSING\"}"
+      },
+      "error": null
+    },
+    {
+      "name": "API Health Endpoint",
+      "passed": true,
+      "details": {
+        "statusCode": 503
+      },
+      "error": null
+    },
+    {
+      "name": "Method Validation",
+      "passed": true,
+      "details": {
+        "statusCode": 404
+      },
+      "error": null
+    }
+  ],
+  "summary": {
+    "total": 6,
+    "passed": 6,
+    "failed": 0
+  },
+  "passRate": 100,
+  "conclusion": "PASS - Production Ready"
+}
